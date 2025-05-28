@@ -1,0 +1,21 @@
+# Python virtual environment and cache
+.venv/
+__pycache__/
+.env
+*.pyc
+
+# Files/folders specific to your Vercel frontend (already deployed there)
+# You don't need these in your backend's Git repo.
+index.html
+static/
+vercel.json
+
+# Backend development/testing files that are not part of the main backend.py deployment
+# As per your clarification, these are likely not needed for the live backend.
+app.py             
+       
+simplerag.py        
+# Other development/temporary folders (based on your structure image)
+app/               
+extra/
+scarping/   
