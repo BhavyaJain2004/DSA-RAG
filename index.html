@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Algorithm Architect</title>
+    <link rel="icon" href="static/robot_icon.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <style>
+        /* CSS variables based on your Streamlit code */
+        :root {
+            --background-color-main: #1C1C2C; /* Not directly used for body now, but kept for consistency */
+            --background-color-body: #171725;
+            --card-background: #25253A;
+            --text-primary: #EAEAEA;
+            --text-secondary: #B0B0C0;
+            --accent-blue: #008DFF;
+            --accent-blue-dark: #006BB3;
+            --accent-green: #00E676;
+            --user-bubble-bg: #323A50;
+            --assistant-bubble-bg: #2C304A;
+            --code-block-bg: #0D1117; /* Highlight.js will override this but kept for consistency */
+            --code-text-color: #C9D1D9;
+            --inline-code-bg: #3A476F;
+            --inline-code-text: #FFD700;
+            --border-color: #3C4A6B;
+            --shadow-color: rgba(0, 0, 0, 0.5);
+            /* Updated info box colors to match Streamlit's st.info more closely */
+            --info-bg: #2A3A5A;
+            --info-text: #78B9F5;
+            --info-border: #4D79B2;
+            --header-background: #10101B;
+            /* Streamlit-like avatar specific colors */
+            --avatar-user-border: #2e7bff;
+            --avatar-user-shadow: rgba(46, 123, 255, 0.5);
+            --avatar-user-bg: #1F2232; /* User avatar background */
+            --avatar-assistant-border: var(--accent-green);
+            --avatar-assistant-shadow: rgba(0, 230, 118, 0.5);
+            --avatar-assistant-bg: #2F3140; /* Assistant avatar background */
+        }
+
+        /* General Reset and Body Styles */
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow-y: auto; /* Allow overall page scrolling */
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--background-color-body);
+            color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Custom Scrollbar for Webkit browsers for the whole body */
+        body::-webkit-scrollbar {
+            width: 8px;
+        }
+        body::-webkit-scrollbar-track {
+            background: var(--background-color-body);
+            border-radius: 10px;
+        }
+        body::-webkit-scrollbar-thumb {
+            background: rgba(80, 80, 100, 0.7);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        body::-webkit-scrollbar-thumb:hover {
+            background: rgba(100, 100, 120, 0.8);
+        }
+
+
+        /* Header */
+        .custom-header {
+            background-color: var(--header-background);
+            padding: 0.8rem 2rem;
+            position: sticky; /* Sticky for fixed top */
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+            box-sizing: border-box;
+            flex-shrink: 0;
+        }
+        .custom-header .brand-text {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 1.5em;
+            color: var(--accent-blue);
+            letter-spacing: 0.02em;
+        }
+        .custom-header .brand-text span {
+            color: var(--text-primary);
+        }
+        .custom-header .logo-icon {
+            font-size: 1.8em;
+            color: var(--accent-green);
+            margin-right: 10px;
+        }
+
+        .visualizer-button {
+            background-color: var(--accent-blue) !important;
+            color: white !important;
+            border: none !important;
+            border-radius: 8px !important;
+            padding: 0.5rem 1rem !important;
+            font-size: 0.9em !important;
+            font-weight: 500 !important;
+            line-height: 1.3;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2) !important;
+            transition: all 0.2s ease !important;
+            cursor: pointer;
+        }
+        .visualizer-button:hover {
+            background-color: var(--accent-blue-dark) !important;
+            transform: translateY(-1px) !important;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3) !important;
+        }
+
+        /* Top-level headings, not inside the main content box */
+        .page-header-content {
+            max-width: 950px;
+            margin: 1.5rem auto 1.0rem auto;
+            padding: 0 2.8rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-shrink: 0;
+        }
+        .page-header-content h1 {
+            color: var(--text-primary);
+            font-weight: 800;
+            font-size: 2.5em;
+            line-height: 1.2;
+            margin-bottom: 0.7rem;
+            letter-spacing: 0.03em;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+        .page-header-content h1 .blue-text {
+            color: var(--accent-blue);
+        }
+        .page-header-content h1 span.block-text {
+            display: block;
+            font-size: 0.9em;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-top: 0.2em;
+            text-shadow: none;
+        }
+        .page-header-content h3 {
+            color: var(--text-primary);
+            font-size: 1.5em;
+            margin-top: 0.5rem;
+            margin-bottom: 0.8rem;
+            line-height: 1.4;
+            text-align: center;
+            font-weight: 600;
+        }
+        .page-header-content p {
+            color: var(--text-secondary);
+            font-size: 0.9em;
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            max-width: 700px;
+        }
+        .page-header-content hr {
+            border-top: 0.5px solid var(--border-color);
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+            width: 100%;
+        }
+
+
+        /* Main Content Wrapper (chat messages, input) */
+        .main-content-card {
+            max-width: 950px;
+            padding: 2rem 2.8rem;
+            margin: 0 auto 1.5rem auto;
+            background-color: var(--card-background);
+            box-shadow: 0 10px 30px var(--shadow-color);
+            border-radius: 15px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+            /* REMOVED min-height and overflow-y: auto from here */
+            /* Let the main-content-card expand with content */
+        }
+
+        /* Chat Container and Messages */
+        #chat-container {
+            display: flex;
+            flex-direction: column;
+            /* REMOVED overflow-y: auto; */ /* NO LONGER SCROLLS INDEPENDENTLY */
+            padding-bottom: 50px; /* Space before input */
+            padding-right: 0; /* No scrollbar space needed here now */
+            /* REMOVED min-height; */ /* Let it grow naturally */
+        }
+
+        /* Custom Scrollbar for Webkit browsers for chat container - REMOVED AS PER REQUIREMENT */
+
+        .chat-message {
+            display: flex;
+            align-items: center; /* Changed from flex-start to center for vertical alignment */
+            margin-bottom: 0.7rem;
+            padding: 1.1rem 1.4rem;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px var(--shadow-color);
+            line-height: 1.6;
+            font-size: 0.95em;
+            color: var(--text-primary);
+            border: 1px solid rgba(255,255,255,0.05);
+            max-width: 100%;
+            word-wrap: break-word;
+        }
+        .chat-message.user {
+            background-color: var(--user-bubble-bg);
+            margin-left: auto;
+            text-align: left;
+            border-bottom-right-radius: 4px;
+            border-top-right-radius: 12px;
+            border-bottom-left-radius: 12px;
+            border-top-left-radius: 12px;
+            margin-bottom: 1.5rem;
+        }
+        .chat-message.assistant {
+            background-color: var(--assistant-bubble-bg);
+            margin-right: auto;
+            text-align: left;
+            border-bottom-left-radius: 4px;
+            border-top-right-radius: 12px;
+            border-bottom-right-radius: 12px;
+            border-top-left-radius: 12px;
+        }
+        .chat-message .icon {
+            width: 32px;
+            height: 32px;
+            margin-right: 12px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.1em;
+            background-color: var(--avatar-user-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--avatar-user-border);
+            box-shadow: 0 0 4px var(--avatar-user-shadow);
+            overflow: hidden;
+            line-height: 1;
+            text-align: center;
+        }
+        /* Robot Icon Image for Assistant */
+        .chat-message.assistant .icon {
+            background-color: var(--avatar-assistant-bg);
+            border-color: var(--avatar-assistant-border);
+            box-shadow: 0 0 4px var(--avatar-assistant-shadow);
+            background-image: url('static/robot_icon.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            color: transparent;
+        }
+        /* Hide the <img> element inside assistant icon if background-image is used */
+        .chat-message.assistant .icon img {
+            display: none;
+        }
+        /* Only show <img> for user icon if you use it */
+        .chat-message.user .icon {
+            background-color: var(--avatar-user-bg);
+            border-color: var(--avatar-user-border);
+            box-shadow: 0 0 4px var(--avatar-user-shadow);
+            color: var(--text-primary);
+        }
+        .chat-message .message-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* This helps center content vertically */
+        }
+        .chat-message .message-content p {
+            text-align: left;
+            color: inherit;
+            margin-top: 0;
+            margin-bottom: 0.6rem;
+        }
+        .chat-message .message-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        .chat-message strong {
+            font-weight: 600;
+            color: var(--accent-green);
+        }
+        .chat-message em {
+            font-style: italic;
+            color: var(--text-secondary);
+        }
+        .chat-message ul, .chat-message ol {
+            padding-left: 20px;
+            margin-bottom: 0.7rem;
+            margin-top: 0.5rem;
+        }
+        .chat-message li {
+            margin-bottom: 0.3rem;
+        }
+        .chat-message a {
+            color: var(--accent-blue);
+            text-decoration: none;
+        }
+        .chat-message a:hover {
+            text-decoration: underline;
+        }
+        .chat-message code {
+            background-color: var(--inline-code-bg);
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            font-family: 'IBM Plex Mono', monospace; /* Ensured monospaced font */
+            font-size: 0.8em;
+            color: var(--inline-code-text);
+            white-space: pre-wrap;
+            word-break: break-word;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .chat-message pre {
+            position: relative;
+            background-color: var(--code-block-bg);
+            color: var(--code-text-color);
+            border-radius: 8px;
+            padding: 1.2rem 1.5rem;
+            padding-top: 2.0rem; /* Space for copy button */
+            overflow-x: auto; /* Allows horizontal scrolling for long lines */
+            margin-top: 0.8rem;
+            margin-bottom: 0.8rem;
+            display: block;
+            font-size: 1.0em; /* Good base size for ASCII art */
+            line-height: 1.3; /* Slightly tighter line height for ASCII art */
+            font-family: 'IBM Plex Mono', monospace, 'Consolas', 'Monaco', 'Andale Mono', 'Ubuntu Mono'; /* More robust monospaced font stack */
+            box-shadow: inset 0 0 8px rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.08);
+            
+            /* Crucial for ASCII art rendering */
+            white-space: pre; /* PRESERVES WHITESPACE AND LINE BREAKS EXACTLY */
+            word-wrap: normal; /* DO NOT BREAK WORDS */
+            word-break: normal; /* DO NOT BREAK WORDS */
+        }
+        .chat-message pre code {
+            background-color: transparent;
+            padding: 0;
+            border-radius: 0;
+            border: none;
+            white-space: inherit; /* Inherit from pre */
+            word-wrap: inherit; /* Inherit from pre */
+            word-break: inherit; /* Inherit from pre */
+            color: inherit; /* Inherit from highlight.js styling */
+            font-size: inherit; /* Inherit from pre */
+            line-height: inherit; /* Inherit from pre */
+        }
+
+        .copy-button {
+            position: absolute;
+            top: 6px;
+            right: 8px;
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--text-secondary);
+            border: none;
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 0.75em;
+            cursor: pointer;
+            opacity: 0.7;
+            transition: opacity 0.2s ease, background-color 0.2s ease;
+            z-index: 10;
+        }
+        .copy-button:hover {
+            opacity: 1;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .copy-button:active {
+            transform: translateY(1px);
+        }
+        .copy-button.copied {
+            background-color: var(--accent-green);
+            color: white;
+            font-size: 0.7em;
+            padding: 3px 6px;
+        }
+
+        /* Chat Input */
+        .chat-input-container {
+            margin-top: 40px;
+            display: flex;
+            align-items: center; /* Vertically center items within this flex container */
+            background-color: var(--card-background);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 12px var(--shadow-color);
+            min-height: 45px;
+            padding: 10px 15px;
+            flex-shrink: 0;
+            /* The textarea will now be vertically centered here */
+        }
+        #chat-input {
+            flex-grow: 1;
+            background-color: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.0em;
+            resize: none;
+            min-height: 20px; /* Minimum height for a single line */
+            max-height: 100px;
+            overflow-y: auto;
+            padding: 0; /* Remove default padding to allow more precise centering */
+            line-height: 1.5; /* Maintain consistent line height */
+            outline: none;
+            font-family: 'Inter', sans-serif;
+            text-align: left; /* Keep text left-aligned always */
+            /* For vertical centering, we'll rely on the parent's flex properties */
+            display: flex; /* Make the textarea a flex container itself */
+            align-items: center; /* Vertically center content inside textarea */
+            justify-content: flex-start; /* Keep content left-aligned horizontally inside textarea */
+            width: 100%; /* Ensure it takes full width within container */
+        }
+        #chat-input::placeholder {
+            color: var(--text-secondary);
+            opacity: 0.8;
+            font-style: italic;
+            font-weight: 300;
+            /* Placeholder can't be vertically centered independently of text content directly with CSS on ::placeholder.
+               The flex properties on #chat-input will handle both. */
+        }
+        #chat-input::-webkit-scrollbar {
+            width: 8px;
+        }
+        #chat-input::-webkit-scrollbar-track {
+            background: transparent;
+            border-radius: 10px;
+        }
+        #chat-input::-webkit-scrollbar-thumb {
+            background: rgba(80, 80, 100, 0.4);
+            border-radius: 10px;
+        }
+        #chat-input::-webkit-scrollbar-thumb:hover {
+            background: rgba(100, 100, 120, 0.6);
+        }
+
+        #send-button {
+            background: none;
+            color: var(--accent-blue);
+            border: none;
+            font-size: 1.6em;
+            padding: 0 3px;
+            margin-left: 8px;
+            cursor: pointer;
+            transition: color 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #send-button:hover {
+            color: var(--accent-green);
+        }
+        #send-button:active {
+            transform: translateY(1px);
+        }
+        /* Spinner for thinking state inside message */
+        .thinking-spinner {
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top: 2px solid var(--accent-blue);
+            border-radius: 50%;
+            width: 14px;
+            height: 14px;
+            animation: spin 0.8s linear infinite;
+            margin-left: 8px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Info Box (Pro Tip) */
+        .info-box {
+            max-width: 950px;
+            margin: 1.5rem auto 1.0rem auto;
+            background-color: var(--info-bg);
+            color: var(--info-text);
+            border-left: 5px solid var(--info-border);
+            border-radius: 8px;
+            padding: 1.0rem 1.2rem;
+            box-shadow: 0 3px 10px var(--shadow-color);
+            font-size: 0.9em;
+            text-align: left;
+            border: 1px solid rgba(255,255,255,0.05);
+            flex-shrink: 0;
+        }
+        .info-box strong {
+            font-weight: 600;
+            color: inherit;
+        }
+        .info-box p {
+            margin: 0;
+            text-align: left;
+            color: inherit;
+            line-height: 1.5;
+        }
+        .info-box p strong {
+            display: inline;
+        }
+
+
+        /* Visualizer Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: rgba(0,0,0,0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: var(--card-background);
+            margin: auto;
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            box-shadow: 0 5px 15px var(--shadow-color);
+            width: 90%;
+            /* --- MODIFIED FOR VISUALIZER HEIGHT --- */
+            height: 95%; /* Increased from 90% */
+            max-height: 750px; /* Increased from 700px, adjust as needed */
+            /* --- END MODIFIED --- */
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-sizing: border-box; /* Ensures padding is included in height */
+        }
+
+        .close-button {
+            color: var(--text-secondary);
+            font-size: 28px;
+            font-weight: bold;
+            position: absolute;
+            top: 10px;
+            right: 20px;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .close-button:hover,
+        .close-button:focus {
+            color: var(--text-primary);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .modal-body {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            /* --- MODIFIED FOR VISUALIZER HEIGHT --- */
+            /* Removed justify-content: center to give more vertical space to iframe */
+            /* justify-content: center; */ 
+            align-items: center; /* Keep horizontal centering of contents */
+            padding-top: 20px;
+            /* --- END MODIFIED --- */
+        }
+        .modal-body h2 {
+            color: var(--text-primary);
+            /* --- MODIFIED FOR VISUALIZER HEIGHT --- */
+            margin-bottom: 0.8rem; /* Slightly reduced from 1rem */
+            flex-shrink: 0; /* Prevents heading from shrinking */
+            /* --- END MODIFIED --- */
+            font-size: 1.6em;
+        }
+
+        .visualizer-iframe-container {
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden; /* Hides iframe scrollbars if content overflows this container */
+            box-shadow: inset 0 0 8px rgba(0,0,0,0.3);
+            background-color: var(--code-block-bg);
+            width: 100%;
+            /* --- MODIFIED FOR VISUALIZER HEIGHT --- */
+            flex-grow: 1; /* Allows this container to take all available vertical space */
+            /* Removed fixed height: 100%; because flex-grow is taking over */
+            /* --- END MODIFIED --- */
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .visualizer-iframe-container iframe {
+            width: 100%;
+            height: 100%; /* This means 100% of its flex-grown parent (.visualizer-iframe-container) */
+            border: none;
+            display: block;
+            background-color: var(--code-block-bg);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            /* Consider adding scrolling="no" in the HTML if you *never* want iframe scrollbars,
+               but be aware content might be cut off. `overflow: hidden;` on the parent is often sufficient. */
+        }
+        .visualizer-iframe-container iframe.loaded {
+            opacity: 1;
+        }
+        .visualizer-loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1em;
+            color: var(--text-secondary);
+            z-index: 5;
+            animation: pulse 1.5s infinite alternate;
+        }
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+
+        /* Footer/Creator Info */
+        .creator-info {
+            max-width: 950px;
+            margin: 1.5rem auto 2.5rem auto;
+            padding: 0 2.8rem;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.85em;
+            flex-shrink: 0;
+        }
+        .creator-info .highlight {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+        .creator-info .blue-accent {
+            color: var(--accent-blue);
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="custom-header">
+        <div style="display: flex; align-items: center;">
+            <span class="logo-icon">🚀</span>
+            <span class="brand-text">Algorithm <span>Architect</span></span>
+        </div>
+        <button id="visualizerButton" class="visualizer-button">📊 DSA Visualizer</button>
+    </div>
+
+    <div class="page-header-content">
+        <h1>
+            Your AI-Powered DSA Learning <span class="blue-text block-text">Co-Pilot</span>
+        </h1>
+        <h3>Deep Dive into Data Structures and Algorithms with AI</h3>
+        <p>Ask questions, get explanations, code examples, and comparisons for any DSA topic.</p>
+        <hr>
+    </div>
+
+    <div class="main-content-card">
+        <div id="chat-container">
+            <div class="chat-message assistant">
+                <div class="icon">
+                    <img src="static/robot_icon.png" alt="Robot Icon"> </div>
+                <div class="message-content">
+                    <p>👋 Welcome to <strong>Algorithm Architect</strong>!</p>
+                    <p>I'm your AI Co-Pilot for Data Structures and Algorithms. Ask me anything from explanations to code examples or visual diagrams!</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-input-container">
+            <textarea id="chat-input" placeholder="e.g., Explain QuickSort with an example or Show me an ASCII diagram of a Binary Tree"></textarea>
+            <button id="send-button">&#10140;</button>
+        </div>
+    </div>
+
+    <div class="info-box">
+        <p>💡 <strong>Pro Tip:</strong> For optimal results, ask clear, detailed questions about Data Structures and Algorithms. Feel yourself free to request explanations, comparisons, code examples, or even visual diagrams!</p>
+    </div>
+
+    <div class="creator-info">
+        <p><span class="highlight">Engineered by</span> <span class="blue-accent">Bhavya Jain</span></p>
+    </div>
+
+    <div id="visualizerModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <div class="modal-body">
+                <h2>Interactive DSA Visualizer</h2>
+                <div class="visualizer-iframe-container">
+                    <div class="visualizer-loading">Loading Visualizer...</div>
+                    <iframe id="algoVisualizerIframe" src="static/algo_visualizer_template.html" frameborder="0" scrolling="auto" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script>
+        // Initialize Highlight.js
+        hljs.highlightAll(); // This applies to initial page load code blocks if any
+
+        // --- Configuration ---
+        const API_BASE_URL = 'http://127.0.0.1:5000'; // Flask backend URL
+        // Initial message, adjusted for the shortened version
+        let messageHistory = [{ role: 'assistant', content: "👋 Welcome to **Algorithm Architect**!\n\nI'm your AI Co-Pilot for Data Structures and Algorithms. Ask me anything from explanations to code examples or visual diagrams!"}];
+
+        // --- DOM Elements ---
+        const chatContainer = document.getElementById('chat-container');
+        const chatInput = document.getElementById('chat-input');
+        const sendButton = document.getElementById('send-button');
+        const visualizerButton = document.getElementById('visualizerButton');
+        const visualizerModal = document.getElementById('visualizerModal');
+        const closeButton = document.querySelector('.close-button');
+        const algoVisualizerIframe = document.getElementById('algoVisualizerIframe');
+        const visualizerLoadingText = document.querySelector('.visualizer-loading');
+
+        let currentThinkingMessageElement = null; // To hold the reference to the thinking message
+
+        // --- Utility Functions ---
+
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+        }
+
+        function convertMarkdownToHtml(markdown) {
+            let html = markdown;
+
+            // Handle code blocks (triple backticks) *before* other replacements
+            // This ensures the content inside code blocks isn't processed as markdown
+            html = html.replace(/```(.*?)?\n([\s\S]*?)```/g, (match, lang, code) => {
+                const escapedCode = escapeHtml(code).trim();
+                const languageClass = lang ? `language-${lang.trim()}` : '';
+                // data-lang is kept for potential future use or specific styling if needed
+                return `<pre><button class="copy-button" onclick="copyCode(this)">Copy</button><code class="${languageClass}" data-lang="${lang ? lang.trim() : ''}">${escapedCode}</code></pre>`;
+            });
+
+            // Now process other markdown outside of code blocks
+            html = html
+                .replace(/^### (.*$)/gim, '<h3>$1</h3>') // H3 headings
+                .replace(/^## (.*$)/gim, '<h2>$1</h2>') // H2 headings
+                .replace(/^# (.*$)/gim, '<h1>$1</h1>') // H1 headings
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // Bold text
+                .replace(/\*(.*?)\*/g, '<em>$1</em>'); // Italic text
+
+            // Convert bullet points (unordered lists) and numbered lists
+            const lines = html.split('\n');
+            let processedLines = [];
+            let inList = false;
+            let listType = ''; // 'ul' or 'ol'
+
+            lines.forEach(line => {
+                const trimmedLine = line.trim();
+                if (trimmedLine.startsWith('- ')) {
+                    if (!inList || listType !== 'ul') {
+                        if (inList) processedLines.push(`</${listType}>`);
+                        processedLines.push('<ul>');
+                        inList = true;
+                        listType = 'ul';
+                    }
+                    processedLines.push(`<li>${trimmedLine.substring(2).trim()}</li>`);
+                } else if (trimmedLine.match(/^\d+\. /)) {
+                    if (!inList || listType !== 'ol') {
+                        if (inList) processedLines.push(`</${listType}>`);
+                        processedLines.push('<ol>');
+                        inList = true;
+                        listType = 'ol';
+                    }
+                    processedLines.push(`<li>${trimmedLine.replace(/^\d+\.\s*/, '').trim()}</li>`);
+                } else {
+                    if (inList) {
+                        processedLines.push(`</${listType}>`);
+                        inList = false;
+                        listType = '';
+                    }
+                    // Handle paragraphs, but avoid wrapping things that are already HTML blocks or empty lines
+                    if (trimmedLine !== '' &&
+                        !trimmedLine.startsWith('<h') &&
+                        !trimmedLine.startsWith('<pre') &&
+                        !trimmedLine.startsWith('<ul') &&
+                        !trimmedLine.startsWith('<ol') &&
+                        !trimmedLine.startsWith('</ul') &&
+                        !trimmedLine.startsWith('</ol') &&
+                        !trimmedLine.startsWith('<div'))
+                    {
+                        processedLines.push(`<p>${line}</p>`);
+                    } else {
+                        processedLines.push(line);
+                    }
+                }
+            });
+
+            if (inList) {
+                processedLines.push(`</${listType}>`);
+            }
+            html = processedLines.join('\n');
+
+            // Additional cleanup for common markdown conversion artifacts and empty paragraphs
+            html = html.replace(/<p><pre>/g, '<pre>').replace(/<\/pre><\/p>/g, '</pre>');
+            html = html.replace(/<p><ul>/g, '<ul>').replace(/<\/ul><\/p>/g, '</ul>');
+            html = html.replace(/<p><ol>/g, '<ol>').replace(/<\/ol><\/p>/g, '</ol>'); // Corrected closing tag for ol
+            html = html.replace(/<p>\s*<\/p>/g, ''); // Remove any empty paragraphs with potential whitespace
+
+            return html;
+        }
+
+
+        function displayMessage(role, content, isThinking = false) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('chat-message', role);
+
+            const iconDiv = document.createElement('div');
+            iconDiv.classList.add('icon');
+
+            if (role === 'user') {
+                iconDiv.textContent = '👤';
+            } else {
+                const img = document.createElement('img');
+                img.src = 'static/robot_icon.png';
+                img.alt = 'Robot Icon';
+                iconDiv.appendChild(img);
+            }
+
+            const messageContentDiv = document.createElement('div');
+            messageContentDiv.classList.add('message-content');
+            
+            if (isThinking) {
+                messageContentDiv.innerHTML = `<p>Thinking... <span class="thinking-spinner"></span></p>`;
+                currentThinkingMessageElement = messageContentDiv;
+            } else {
+                messageContentDiv.innerHTML = convertMarkdownToHtml(content);
+            }
+
+            messageElement.appendChild(iconDiv);
+            messageElement.appendChild(messageContentDiv);
+            chatContainer.appendChild(messageElement);
+
+            // Apply highlighting for code blocks only after content is in DOM and not during thinking state
+            if (!isThinking) {
+                messageContentDiv.querySelectorAll('pre code').forEach((block) => {
+                    try {
+                        hljs.highlightElement(block);
+                    } catch (e) {
+                        console.warn("Highlight.js failed to highlight a block:", e);
+                        // Fallback styles if highlighting fails, ensure it still looks like a code block
+                        block.style.backgroundColor = 'var(--code-block-bg)'; 
+                        block.style.color = 'var(--code-text-color)';
+                        block.style.whiteSpace = 'pre';
+                        block.style.wordWrap = 'normal';
+                        block.style.wordBreak = 'normal';
+                    }
+                });
+            }
+
+            // Scroll to bottom of the *page*
+            window.scrollTo(0, document.body.scrollHeight);
+        }
+
+        async function sendMessage() {
+            const userInput = chatInput.value.trim();
+            if (userInput === '') return;
+
+            displayMessage('user', userInput);
+
+            chatInput.value = '';
+            chatInput.style.height = 'auto'; // Reset textarea height
+
+            displayMessage('assistant', '', true); // Show thinking indicator
+
+            try {
+                const payload = {
+                    input: userInput,
+                    chat_history: messageHistory
+                };
+
+                const response = await fetch(`${API_BASE_URL}/chat`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload),
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error(`HTTP error! Status: ${response.status}, Details: ${errorText}`);
+                    throw new Error(`HTTP error! status: ${response.status}, details: ${errorText}`);
+                }
+
+                const data = await response.json();
+                const assistantResponse = data.output;
+                
+                if (currentThinkingMessageElement) {
+                    currentThinkingMessageElement.innerHTML = convertMarkdownToHtml(assistantResponse);
+                    // Apply highlighting to the received response in the thinking message
+                    currentThinkingMessageElement.querySelectorAll('pre code').forEach((block) => {
+                        try {
+                            hljs.highlightElement(block);
+                        } catch (e) {
+                            console.warn("Highlight.js failed on a block in received message:", e);
+                            block.style.backgroundColor = 'var(--code-block-bg)';
+                            block.style.color = 'var(--code-text-color)';
+                            block.style.whiteSpace = 'pre';
+                            block.style.wordWrap = 'normal';
+                            block.style.wordBreak = 'normal';
+                        }
+                    });
+                } else {
+                    // Fallback, though currentThinkingMessageElement should always be set
+                    displayMessage('assistant', assistantResponse);
+                }
+
+                messageHistory.push({ role: 'user', content: userInput });
+                messageHistory.push({ role: 'assistant', content: assistantResponse });
+
+            } catch (error) {
+                console.error('Error sending message:', error);
+                if (currentThinkingMessageElement) {
+                    currentThinkingMessageElement.innerHTML = `<p>Oops! Something went wrong. Please try again. (Check console for details)</p>`;
+                } else {
+                    displayMessage('assistant', "Oops! Something went wrong. Please try again. (Check console for details)");
+                }
+            } finally {
+                currentThinkingMessageElement = null; 
+                window.scrollTo(0, document.body.scrollHeight); // Scroll to bottom after response
+            }
+        }
+
+        function copyCode(button) {
+            const codeBlock = button.nextElementSibling; // The <code> element
+            const codeText = codeBlock.innerText;
+
+            navigator.clipboard.writeText(codeText).then(() => {
+                button.textContent = 'Copied!';
+                button.classList.add('copied');
+                setTimeout(() => {
+                    button.textContent = 'Copy';
+                    button.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy text: ', err);
+            });
+        }
+
+        // --- Event Listeners ---
+
+        sendButton.addEventListener('click', sendMessage);
+
+        chatInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                sendMessage();
+            }
+        });
+
+        // Auto-resize textarea
+        chatInput.addEventListener('input', function() {
+            this.style.height = 'auto';
+            this.style.height = (this.scrollHeight) + 'px';
+        });
+        
+        // Remove focus/blur listeners for horizontal centering, as we want overall vertical centering now
+        // chatInput.addEventListener('focus', function() { ... });
+        // chatInput.addEventListener('blur', function() { ... });
+
+        visualizerButton.addEventListener('click', () => {
+            visualizerModal.style.display = 'flex';
+            if (algoVisualizerIframe.contentWindow) {
+                algoVisualizerIframe.contentWindow.scrollTo(0, 0);
+            }
+        });
+
+        closeButton.addEventListener('click', () => {
+            visualizerModal.style.display = 'none';
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target == visualizerModal) {
+                visualizerModal.style.display = 'none';
+            }
+        });
+
+        algoVisualizerIframe.onload = () => {
+            visualizerLoadingText.style.display = 'none';
+            algoVisualizerIframe.classList.add('loaded');
+        };
+
+        // Populate chat with initial message on load
+        document.addEventListener('DOMContentLoaded', () => {
+            window.scrollTo(0, document.body.scrollHeight);
+
+            visualizerModal.style.display = 'none';
+            // Highlight initial assistant message if it contains code
+            document.querySelectorAll('.chat-message.assistant pre code').forEach((block) => {
+                try {
+                    hljs.highlightElement(block);
+                } catch (e) {
+                    console.warn("Highlight.js failed on initial message block:", e);
+                }
+            });
+        });
+
+        chatContainer.addEventListener('click', function(event) {
+            const target = event.target;
+            if (target.tagName === 'A' && target.closest('.chat-message')) {
+                event.preventDefault();
+                console.log("Clicked on link:", target.href);
+            }
+        });
+    </script>
+</body>
+</html>
