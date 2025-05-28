@@ -13,7 +13,7 @@ load_dotenv(find_dotenv())
 app = Flask(__name__)
 # Enable CORS for all origins for development.
 # In production, restrict this to your frontend's domain.
-CORS(app) 
+CORS(app, origins=["https://dsa-rag.vercel.app/"]) 
 
 # --- Initialize your DSA resources (similar to Streamlit's @st.cache_resource) ---
 # This part runs when the Flask app starts.
@@ -96,4 +96,4 @@ def chat():
 
 if __name__ == '__main__':
     # You can change the port if 5000 is in use
-    app.run(debug=True, port=5000)
+   app.run(debug=True, host='0.0.0.0', port=5000)
