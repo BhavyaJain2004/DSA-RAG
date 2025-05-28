@@ -147,3 +147,4 @@ shellingham==1.5.4
 tabulate==0.9.0
 together==1.5.8
 typer==0.15.4
+gunicorn
