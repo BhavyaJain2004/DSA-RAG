@@ -1,4 +1,5 @@
 Flask==3.1.1
+flashrank
 flask-cors==6.0.0
 gunicorn==23.0.0
 python-dotenv==1.1.0
