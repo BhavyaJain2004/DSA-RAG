@@ -1,0 +1,2064 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <base href="/app/static/"> <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Structures & Algorithms Visualizer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* General Body and Container Styles */
+      /* General Body and Container Styles */
+      body {
+            font-family: 'Montserrat', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; 
+            background-color: #f0f2f5; 
+            color: #333; 
+            margin: 0;
+            padding: 20px 15px; /* Slightly reduced body padding */
+            box-sizing: border-box;
+            min-height: 0vh; 
+        }
+
+        .visualizer-container {
+            background-color: #ffffff; 
+            border-radius: 16px; /* Keep original border-radius */
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15); /* Keep original shadow */
+            padding: 30px; /* Reduced padding from 40px */
+            width: 100%;
+            max-width: 950px; /* Reduced max-width from 1200px */
+            display: flex;
+            flex-direction: column;
+            gap: 25px; /* Reduced spacing from 35px */
+            border: 1px solid #e0e0e0; 
+            height: 600px; /* Reduced height from 800px */
+        }
+
+        .visualizer-title {
+            text-align: center;
+            color: #2c3e50; 
+            margin-top: 0;
+            margin-bottom: 20px; /* Reduced margin-bottom from 25px */
+            font-size: 2.2em; /* Reduced font size from 2.8em */
+            font-weight: 700;
+            letter-spacing: 0.03em;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.05); 
+        }
+
+        /* Controls Section */
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px; /* Reduced spacing from 30px */
+            justify-content: center;
+            align-items: center;
+            padding-bottom: 20px; /* Reduced padding from 30px */
+            border-bottom: 1px solid #e0e0e0; 
+        }
+
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 10px; /* Reduced spacing from 15px */
+        }
+
+        label {
+            font-weight: 600; 
+            color: #555; 
+            font-size: 0.95em; /* Reduced font size from 1.05em */
+            white-space: nowrap; 
+        }
+
+        /* Slider Styles */
+        input[type="range"] {
+            -webkit-appearance: none; 
+            appearance: none;
+            width: 150px; /* Reduced width from 180px */
+            height: 7px; /* Reduced height from 8px */
+            background: #d3d3d3; 
+            outline: none;
+            opacity: 0.7;
+            border-radius: 5px;
+            transition: opacity .2s;
+        }
+
+        input[type="range"]:hover {
+            opacity: 1;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px; /* Reduced size from 20px */
+            height: 18px; /* Reduced size from 20px */
+            border-radius: 50%; 
+            background: #007bff; 
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 123, 255, 0.4); 
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 18px; /* Reduced size from 20px */
+            height: 18px; /* Reduced size from 20px */
+            border-radius: 50%;
+            background: #007bff;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 123, 255, 0.4);
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+        input[type="range"]::-webkit-slider-thumb:hover,
+        input[type="range"]::-moz-range-thumb:hover {
+            background-color: #0056b3; 
+            transform: scale(1.1); 
+        }
+
+        .slider-value {
+            font-weight: 500;
+            color: #444; 
+            font-size: 0.85em; /* Reduced font size from 0.95em */
+            margin-left: 6px; /* Reduced margin from 8px */
+            min-width: 25px; /* Reduced min-width from 30px */
+            text-align: right; 
+        }
+
+        /* Custom Selectbox Styling */
+        .select-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+        select {
+            padding: 10px 30px 10px 15px; /* Reduced padding from 12px 38px 12px 20px */
+            border: 1px solid #bbb; 
+            border-radius: 10px; 
+            background-color: #f8f8f8; 
+            color: #333; 
+            font-size: 0.95em; /* Reduced font size from 1.05em */
+            min-width: 180px; /* Reduced min-width from 220px */
+            appearance: none; 
+            -webkit-appearance: none; 
+            cursor: pointer;
+            box-shadow: inset 0 1px 4px rgba(0,0,0,0.08); 
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        select:hover {
+            border-color: #007bff;
+            box-shadow: inset 0 1px 4px rgba(0,0,0,0.15), 0 0 0 3px rgba(0, 123, 255, 0.2); 
+        }
+        select:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: inset 0 1px 4px rgba(0,0,0,0.15), 0 0 0 3px rgba(0, 123, 255, 0.3); 
+        }
+        .select-wrapper::after { 
+            content: '▼';
+            position: absolute;
+            right: 15px; /* Adjusted position from 18px */
+            top: 50%;
+            transform: translateY(-50%);
+            color: #007bff; 
+            font-size: 0.7em; /* Reduced font size from 0.8em */
+            pointer-events: none; 
+        }
+
+        /* Input type number */
+        input[type="number"] {
+            padding: 8px 12px; /* Reduced padding from 10px 15px */
+            border: 1px solid #bbb;
+            border-radius: 10px;
+            background-color: #f8f8f8;
+            color: #333;
+            font-size: 0.95em; /* Reduced font size from 1.05em */
+            width: 80px; /* Reduced width from 100px */
+            box-shadow: inset 0 1px 4px rgba(0,0,0,0.08);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        input[type="number"]:hover {
+            border-color: #007bff;
+            box-shadow: inset 0 1px 4px rgba(0,0,0,0.15), 0 0 0 3px rgba(0, 123, 255, 0.2);
+        }
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: inset 0 1px 4px rgba(0,0,0,0.15), 0 0 0 3px rgba(0, 123, 255, 0.3);
+        }
+
+
+        /* Control Buttons */
+        .control-buttons {
+            display: flex;
+            gap: 15px; /* Reduced spacing from 20px */
+        }
+
+        .control-buttons button {
+            padding: 12px 30px; /* Reduced padding from 14px 35px */
+            background-color: #007bff; 
+            color: white;
+            border: none;
+            border-radius: 10px; 
+            cursor: pointer;
+            font-size: 1em; /* Reduced font size from 1.1em */
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out, box-shadow 0.2s ease;
+            box-shadow: 0 5px 12px rgba(0, 123, 255, 0.3); /* Slightly reduced shadow */
+            position: relative; 
+        }
+
+        .control-buttons button:hover {
+            background-color: #0056b3; 
+            transform: translateY(-2px); /* Slightly reduced lift effect */
+            box-shadow: 0 6px 15px rgba(0, 123, 255, 0.4); /* Slightly reduced shadow on hover */
+        }
+        .control-buttons button:active {
+            transform: translateY(0); 
+            box-shadow: 0 2px 5px rgba(0, 123, 255, 0.2); 
+            background-color: #004085; 
+        }
+
+        .control-buttons button:disabled {
+            background-color: #cccccc; 
+            color: #666;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none; 
+        }
+
+        /* Visualization Area */
+        .visualization-area {
+            width: 100%;
+            min-height: 350px; /* Reduced min-height from 400px */
+            background-color: #f8f8f8; 
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 8px; /* Reduced padding from 10px */
+            box-sizing: border-box; 
+            position: relative; 
+            overflow: hidden; 
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05); 
+            display: flex; 
+            justify-content: center;
+            align-items: center; 
+        }
+        
+        .visualization-message {
+            position: absolute;
+            top: 50%; 
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.3em; /* Reduced font size from 1.5em */
+            font-weight: 600;
+            color: #d9534f; 
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 8px 15px; /* Reduced padding from 10px 20px */
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            z-index: 100; 
+            white-space: nowrap;
+        }
+        .visualization-message.info {
+            color: #007bff; 
+        }
+        /* Specific message positioning for Stack and Queue - now consistent at top */
+        #stack-container + .visualization-message,
+        #queue-container + .visualization-message {
+            top: 10%; /* Keep position at top of stack/queue area */
+            transform: translateX(-50%);
+        }
+
+        /* Bars Container and Individual Bar Styling (for Array visualizations) */
+        #array-bars-container {
+            display: flex; 
+            align-items: flex-end; 
+            justify-content: space-around; 
+            width: 100%;
+            height: 100%; 
+            box-sizing: border-box; 
+            padding: 0 3px; /* Reduced padding from 0 5px */
+        }
+
+        .bar {
+            position: relative; 
+            width: var(--bar-width); 
+            min-width: 2px; 
+            height: var(--bar-height); 
+            background-color: #4a86e8; 
+            margin: 0 1px; /* Reduced margin from 0 1.5px */
+            border-radius: 4px 4px 0 0; /* Slightly reduced border-radius from 5px */
+            transition: background-color 0.1s ease, height 0.1s ease, transform 0.05s ease; 
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15); /* Slightly reduced shadow */
+            display: flex; 
+            justify-content: center;
+            align-items: flex-start; 
+            border: 1px solid rgba(0,0,0,0.05); 
+        }
+
+        .bar-value {
+            position: absolute;
+            top: -18px; /* Adjusted position from -22px */
+            color: #333; 
+            font-size: 0.75em; /* Reduced font size from 0.8em */
+            font-weight: 500;
+            white-space: nowrap;
+            opacity: 0.9; 
+            transition: opacity 0.1s ease;
+            text-shadow: 0 1px 1px rgba(255,255,255,0.8); 
+            display: var(--show-value, block); 
+        }
+
+        /* Bar Colors for different states */
+        .bar.comparing {
+            background-color: #ffc107; 
+            box-shadow: 0 0 8px rgba(255, 193, 7, 0.9); /* Slightly reduced glow */
+            transform: translateY(-1px); /* Slightly reduced lift */
+        }
+        .bar.swapping {
+            background-color: #dc3545; 
+            box-shadow: 0 0 10px rgba(220, 53, 69, 0.9); /* Slightly reduced glow */
+            transform: translateY(-1px);
+        }
+        .bar.pivot {
+            background-color: #6f42c1; 
+            box-shadow: 0 0 10px rgba(111, 66, 193, 0.9); /* Slightly reduced glow */
+            transform: translateY(-1px);
+        }
+        .bar.sorted {
+            background-color: #28a745; 
+            box-shadow: 0 0 8px rgba(40, 167, 69, 0.9); /* Slightly reduced glow */
+        }
+        .bar.merging {
+            background-color: #17a2b8; 
+        }
+        .bar.found { 
+            background-color: #00cc00; 
+            box-shadow: 0 0 12px rgba(0, 204, 0, 0.9); /* Slightly reduced glow */
+            transform: scale(1.03); /* Slightly reduced scale */
+        }
+        .bar.target { 
+            background-color: #ff8c00; 
+            box-shadow: 0 0 12px rgba(255, 140, 0, 0.9); /* Slightly reduced glow */
+            transform: translateY(-3px); /* Slightly reduced lift */
+        }
+
+        /* Stack Specific Styles */
+        #stack-container {
+            display: none; 
+            flex-direction: column-reverse; 
+            align-items: center;
+            justify-content: flex-start; 
+            width: 100%;
+            height: 100%;
+            padding: 8px; /* Reduced padding from 10px */
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        /* Adjust visualization-area alignment for stack to push it to the bottom */
+        .visualization-area.for-stack {
+            align-items: flex-end; 
+        }
+
+
+        .stack-element {
+            width: 100px; /* Reduced width from 120px */
+            height: 40px; /* Reduced height from 50px */
+            background-color: #6a5acd; 
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 4px; /* Reduced margin from 5px */
+            border-radius: 7px; /* Slightly reduced border-radius from 8px */
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15); /* Slightly reduced shadow */
+            font-size: 1.1em; /* Reduced font size from 1.2em */
+            font-weight: 600;
+            transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+            flex-shrink: 0; 
+        }
+        .stack-element.highlight {
+            background-color: #ff4500; 
+            transform: scale(1.03); /* Slightly reduced scale */
+            box-shadow: 0 5px 12px rgba(255, 69, 0, 0.35); /* Slightly reduced shadow */
+        }
+
+
+        /* Queue Specific Styles */
+        #queue-container {
+            display: none; 
+            flex-direction: row; 
+            align-items: center;
+            justify-content: flex-start; 
+            width: 100%;
+            height: 100%;
+            padding: 8px 30px; /* Reduced padding from 10px 50px */
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        /* Adjust visualization-area alignment for queue to push it to the bottom */
+        .visualization-area.for-queue {
+            align-items: flex-end; 
+        }
+
+        .queue-element {
+            min-width: 70px; /* Reduced min-width from 80px */
+            height: 50px; /* Reduced height from 60px */
+            background-color: #20b2aa; 
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 4px; /* Reduced margin from 5px */
+            border-radius: 7px; /* Slightly reduced border-radius from 8px */
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15); /* Slightly reduced shadow */
+            font-size: 1.1em; /* Reduced font size from 1.2em */
+            font-weight: 600;
+            transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+            flex-shrink: 0;
+        }
+        .queue-element.highlight {
+            background-color: #ff4500; 
+            transform: scale(1.03); /* Slightly reduced scale */
+            box-shadow: 0 5px 12px rgba(255, 69, 0, 0.35); /* Slightly reduced shadow */
+        }
+        .queue-front-label, .queue-rear-label {
+            position: absolute;
+            font-size: 1em; /* Reduced font size from 1.1em */
+            font-weight: 600;
+            color: #555;
+            white-space: nowrap;
+            top: calc(50% - 35px); /* Adjusted position from 40px */
+            transform: translateY(-50%);
+        }
+        .queue-front-label {
+            left: 5px; 
+        }
+        .queue-rear-label {
+            right: 5px; 
+        }
+
+        /* Linked List Specific Styles */
+        #linkedlist-container {
+            display: none; 
+            flex-direction: row;
+            align-items: center;
+            justify-content: flex-start;
+            width: 100%;
+            height: 100%;
+            padding: 15px; /* Reduced padding from 20px */
+            box-sizing: border-box;
+            position: relative;
+            overflow-x: auto; 
+        }
+
+        .ll-node-wrapper {
+            display: flex;
+            align-items: center;
+            flex-shrink: 0; 
+        }
+
+        .ll-node {
+            width: 70px; /* Reduced width from 80px */
+            height: 50px; /* Reduced height from 60px */
+            background-color: #1a73e8; 
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 7px; /* Slightly reduced border-radius from 8px */
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15); /* Slightly reduced shadow */
+            font-size: 1.1em; /* Reduced font size from 1.2em */
+            font-weight: 600;
+            position: relative;
+            transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease, opacity 0.3s ease; 
+            margin-right: 4px; /* Reduced margin from 5px */
+        }
+
+        .ll-node.highlight {
+            background-color: #ff4500; 
+            transform: scale(1.03); /* Slightly reduced scale */
+            box-shadow: 0 5px 12px rgba(255, 69, 0, 0.35); /* Slightly reduced shadow */
+        }
+
+        .ll-node.target-found {
+            background-color: #28a745; 
+            transform: scale(1.03); 
+            box-shadow: 0 5px 12px rgba(40, 167, 69, 0.35); 
+        }
+
+        .ll-node.deleting {
+            background-color: #dc3545; 
+            transform: scale(0.8);
+            opacity: 0.5;
+        }
+        
+        .ll-arrow {
+            width: 25px; /* Reduced length from 30px */
+            height: 2px;
+            background-color: #555;
+            position: relative;
+            margin-right: 4px; /* Reduced margin from 5px */
+        }
+
+        .ll-arrow::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: 0;
+            transform: translateY(-50%) rotate(45deg);
+            width: 8px; /* Reduced size from 10px */
+            height: 8px; /* Reduced size from 10px */
+            border-top: 2px solid #555;
+            border-right: 2px solid #555;
+        }
+
+        #linkedlist-traversal-output {
+            margin-top: 10px; /* Reduced margin from 15px */
+            padding: 8px; /* Reduced padding from 10px */
+            background-color: #e6e6e6; 
+            border-radius: 8px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.95em; /* Reduced font size from 1em */
+            color: #333;
+            min-height: 25px; /* Reduced min-height from 30px */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            border: 1px solid #ccc;
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            .visualizer-container {
+                padding: 20px; /* Keep consistent with general reduction */
+                gap: 20px;
+            }
+            .visualizer-title {
+                font-size: 1.8em; /* Keep original responsive size */
+                margin-bottom: 15px;
+            }
+            .controls {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+                padding-bottom: 15px;
+            }
+            .control-group {
+                width: 100%;
+                justify-content: space-between;
+            }
+            input[type="range"] {
+                width: 100px; 
+            }
+            select {
+                width: auto;
+                flex-grow: 1;
+                min-width: unset;
+            }
+            .control-buttons {
+                width: 100%;
+                flex-direction: column;
+                gap: 10px;
+                margin-top: 10px;
+            }
+            .control-buttons button {
+                width: 100%;
+            }
+            .visualization-area {
+                min-height: 300px; /* Adjusted to fit the new base size */
+                padding: 10px;
+            }
+            .bar {
+                margin: 0 0.5px; 
+                border-radius: 2px 2px 0 0;
+            }
+            .bar-value {
+                font-size: 0.65em; 
+                top: -15px;
+            }
+
+            .stack-element, .queue-element, .ll-node {
+                width: 80px; /* Reverted to original responsive size for better readability */
+                height: 40px; /* Reverted to original responsive size */
+                font-size: 1em; /* Reverted to original responsive size */
+            }
+            .ll-arrow {
+                width: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="visualizer-container">
+        <h1 class="visualizer-title">Data Structures & Algorithms Visualizer</h1>
+        
+        <div class="controls">
+            <div class="control-group">
+                <label for="dataStructureSelect">Data Structure:</label>
+                <div class="select-wrapper">
+                    <select id="dataStructureSelect">
+                        <option value="Array">Array</option>
+                        <option value="Stack">Stack</option>
+                        <option value="Queue">Queue</option>
+                        <option value="LinkedList">Linked List</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label for="algorithmSelect">Algorithm/Operation:</label>
+                <div class="select-wrapper">
+                    <select id="algorithmSelect">
+                    </select>
+                </div>
+            </div>
+
+            <div class="control-group" id="array-size-control">
+                <label for="arraySizeInput">Array Size:</label>
+                <input type="range" id="arraySizeInput" min="10" max="150" value="50">
+                <span id="arraySizeValueSpan">50</span>
+            </div>
+
+            <div class="control-group">
+                <label for="animationSpeedInput">Speed (ms):</label>
+                <input type="range" id="animationSpeedInput" min="10" max="500" value="150">
+                <span id="animationSpeedValueSpan">150</span>
+            </div>
+
+            <div class="control-group" id="ds-value-input-group" style="display: none;">
+                <label for="valueInput">Value:</label>
+                <input type="number" id="valueInput" min="1" max="100" value="50">
+            </div>
+            
+            <div class="control-buttons">
+                <button id="startButton">Start</button>
+                <button id="resetButton">Reset</button>
+            </div>
+        </div>
+
+        <div class="visualization-area">
+            <div id="array-bars-container"></div>
+            <div id="stack-container" style="display: none;">
+                </div>
+            <div id="queue-container" style="display: none;">
+                </div>
+            <div id="linkedlist-container" style="display: none;">
+                </div>
+            <div id="visualization-message" class="visualization-message" style="display: none;"></div>
+        </div>
+        <div id="linkedlist-traversal-output" style="display: none;"></div>
+    </div>
+
+    <script>
+        // --- Global Variables & DOM Elements ---
+        const visualizerContainer = document.querySelector('.visualizer-container');
+        const visualizationArea = document.querySelector('.visualization-area');
+        const arrayBarsContainer = document.getElementById('array-bars-container');
+        const stackContainer = document.getElementById('stack-container');
+        const queueContainer = document.getElementById('queue-container');
+        const linkedlistContainer = document.getElementById('linkedlist-container');
+        const linkedlistTraversalOutput = document.getElementById('linkedlist-traversal-output'); // New
+        const visualizationMessage = document.getElementById('visualization-message');
+
+        const dataStructureSelect = document.getElementById('dataStructureSelect');
+        const algorithmSelect = document.getElementById('algorithmSelect');
+        const startButton = document.getElementById('startButton');
+        const resetButton = document.getElementById('resetButton');
+        const arraySizeInput = document.getElementById('arraySizeInput');
+        const arraySizeValueSpan = document.getElementById('arraySizeValueSpan');
+        const animationSpeedInput = document.getElementById('animationSpeedInput');
+        const animationSpeedValueSpan = document.getElementById('animationSpeedValueSpan');
+        const dsValueInputGroup = document.getElementById('ds-value-input-group');
+        const valueInput = document.getElementById('valueInput'); 
+        const arraySizeControl = document.getElementById('array-size-control'); 
+        
+        let array = [];
+        let arraySize = parseInt(arraySizeInput.value);
+        let animationSpeed = parseInt(animationSpeedInput.value);
+        let isVisualizing = false;
+        let isPaused = false; 
+        let currentAlgorithmGenerator = null;
+        let currentDataStructure = dataStructureSelect.value;
+        let currentAlgorithmType = ''; 
+        let currentAlgorithmName = ''; 
+        
+        let animationFrameId = null; 
+        
+        // Data Structure Instances
+        let currentStack = null;
+        let currentQueue = null;
+        let currentLinkedList = null; 
+
+        // Mapping Data Structures to their types and algorithms
+        const dataStructureMap = {
+            'Array': {
+                types: {
+                    'Sorting': [
+                        { value: 'bubbleSort', text: 'Bubble Sort' },
+                        { value: 'selectionSort', text: 'Selection Sort' },
+                        { value: 'insertionSort', text: 'Insertion Sort' },
+                        { value: 'mergeSort', text: 'Merge Sort' },
+                        { value: 'quickSort', text: 'Quick Sort' }
+                    ],
+                    'Searching': [
+                        { value: 'linearSearch', text: 'Linear Search' }
+                    ]
+                }
+            },
+            'Stack': {
+                types: {
+                    'Operations': [
+                        { value: 'stackPush', text: 'Push (Add Element)' },
+                        { value: 'stackPop', text: 'Pop (Remove Top)' }
+                    ]
+                }
+            },
+            'Queue': {
+                types: {
+                    'Operations': [
+                        { value: 'queueEnqueue', text: 'Enqueue (Add to Rear)' },
+                        { value: 'queueDequeue', text: 'Dequeue (Remove from Front)' }
+                    ]
+                }
+            },
+            'LinkedList': {
+                types: {
+                    'Operations': [
+                        { value: 'linkedListAddHead', text: 'Add to Head' },
+                        { value: 'linkedListAddTail', text: 'Add to Tail' },
+                        { value: 'linkedListDeleteHead', text: 'Delete at Head' }, // Changed
+                        { value: 'linkedListDeleteTail', text: 'Delete at Tail' }, // Changed
+                        { value: 'linkedListTraversal', text: 'Traversal (Print List)' }
+                    ]
+                }
+            }
+        };
+
+
+        // --- Utility Functions ---
+
+        /** Generates a new array of random heights */
+        function generateArray(size) {
+            const newArray = [];
+            const vizAreaHeight = visualizationArea.clientHeight; 
+            const maxBarHeight = vizAreaHeight * 0.75; 
+            const minBarHeight = vizAreaHeight * 0.05; 
+            const valueRange = 100; 
+            
+            for (let i = 0; i < size; i++) {
+                const randomValue = Math.floor(Math.random() * valueRange) + 1; 
+                const scaledHeight = (randomValue / valueRange) * (maxBarHeight - minBarHeight) + minBarHeight;
+                newArray.push({ value: randomValue, height: scaledHeight });
+            }
+            return newArray;
+        }
+
+        /** Renders the array as DIV bars */
+        function renderArrayBars(arr, highlightA = -1, highlightB = -1, pivot = -1, sortedTill = -1, foundIndex = -1, targetValue = -1) {
+            arrayBarsContainer.innerHTML = ''; 
+            
+            if (arr.length === 0) {
+                // For array, if empty, it's usually just a visual state for now.
+                // The message "Array is empty" would generally not appear on initial load for array.
+                // For sorting/searching, an empty array would immediately finish.
+            }
+            const totalMargin = arr.length * 3; 
+            const availableWidth = arrayBarsContainer.clientWidth - totalMargin;
+            const barWidth = Math.max(5, Math.floor(availableWidth / arr.length)); 
+
+            arr.forEach((item, index) => {
+                const bar = document.createElement('div');
+                bar.classList.add('bar');
+                bar.style.setProperty('--bar-height', `${item.height}px`);
+                bar.style.setProperty('--bar-width', `${barWidth}px`);
+
+                const barValueSpan = document.createElement('span');
+                barValueSpan.classList.add('bar-value');
+                barValueSpan.textContent = item.value;
+                bar.appendChild(barValueSpan);
+
+                if (barWidth < 25) {
+                    bar.style.setProperty('--show-value', 'none');
+                } else {
+                    bar.style.setProperty('--show-value', 'block');
+                }
+
+                if (currentAlgorithmType === 'Sorting') {
+                    if (index === highlightA || index === highlightB) {
+                        bar.classList.add('comparing');
+                    }
+                    if (index === pivot) {
+                        bar.classList.add('pivot');
+                    }
+                    if (currentAlgorithmName === 'bubbleSort' || currentAlgorithmName === 'selectionSort') {
+                        if (sortedTill !== -1 && index >= arr.length - 1 - sortedTill) {
+                            bar.classList.add('sorted');
+                        }
+                    } else if (currentAlgorithmName === 'insertionSort') {
+                        if (sortedTill !== -1 && index <= sortedTill) {
+                            bar.classList.add('sorted');
+                        }
+                    } else if (currentAlgorithmName === 'quickSort') {
+                        if (index === sortedTill && sortedTill !== -1) {
+                            bar.classList.add('sorted');
+                        }
+                    }
+                    if (sortedTill === arr.length - 1) { 
+                        bar.classList.add('sorted');
+                    }
+                } 
+                else if (currentAlgorithmType === 'Searching') {
+                    if (index === highlightA) bar.classList.add('comparing'); 
+                    if (index === foundIndex) { 
+                        bar.classList.add('found');
+                        bar.classList.remove('comparing', 'target');
+                    } else if (item.value === targetValue) { 
+                        if (foundIndex === -1 || index !== foundIndex) {
+                            bar.classList.add('target');
+                        }
+                    }
+                }
+                arrayBarsContainer.appendChild(bar);
+            });
+        }
+
+        /** Shows a message in the visualization area */
+        function showVisualizationMessage(message, isInfo = false) {
+            visualizationMessage.textContent = message;
+            visualizationMessage.classList.remove('info', 'error'); 
+            if (isInfo) {
+                visualizationMessage.classList.add('info');
+            } else {
+                visualizationMessage.classList.add('error');
+            }
+            visualizationMessage.style.display = 'block';
+        }
+
+        /** Hides the message in the visualization area */
+        function hideVisualizationMessage() {
+            visualizationMessage.style.display = 'none';
+        }
+        
+        /** Clears and hides the Linked List traversal output */
+        function clearTraversalOutput() {
+            linkedlistTraversalOutput.innerHTML = '';
+            linkedlistTraversalOutput.style.display = 'none';
+        }
+
+        // --- COMMON ALGORITHM VISUALIZATION FUNCTIONS ---
+
+        /** Sleep function for animation delay */
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        /** Disables/Enables control elements */
+        function disableControls() {
+            // Data structure and algorithm selection are disabled ONLY when an algorithm is actively running (not paused)
+            dataStructureSelect.disabled = isVisualizing && !isPaused; 
+            algorithmSelect.disabled = isVisualizing && !isPaused; 
+            
+            // Sliders and value input are disabled ONLY when an algorithm is actively running (not paused)
+            arraySizeInput.disabled = isVisualizing && !isPaused && currentDataStructure === 'Array';
+            animationSpeedInput.disabled = isVisualizing && !isPaused;
+            
+            // Value input specific logic for DS operations
+            const isValueInputNeeded = (currentDataStructure === 'Stack' && currentAlgorithmName === 'stackPush') ||
+                                       (currentDataStructure === 'Queue' && currentAlgorithmName === 'queueEnqueue') ||
+                                       (currentDataStructure === 'LinkedList' && (currentAlgorithmName === 'linkedListAddHead' || currentAlgorithmName === 'linkedListAddTail')) ||
+                                       (currentDataStructure === 'Array' && currentAlgorithmType === 'Searching');
+
+            valueInput.disabled = isVisualizing && !isPaused && !isValueInputNeeded;
+            if (!isValueInputNeeded) {
+                valueInput.disabled = true; // Always disable if not needed
+            }
+        }
+
+
+        /** Handles Start/Pause/Resume logic */
+        async function toggleVisualization() { // Added async keyword
+            if (!currentAlgorithmName) {
+                showVisualizationMessage("Please select an algorithm/operation.", false);
+                return;
+            }
+
+            if (!isVisualizing) {
+                // Initial Start (or restart after pause/reset)
+                isVisualizing = true;
+                isPaused = false;
+                startButton.textContent = 'Pause';
+                disableControls(); 
+                hideVisualizationMessage();
+                clearTraversalOutput(); // Clear traversal output on start
+
+                // Initialize the generator based on current DS and Algo
+                if (currentDataStructure === 'Array') {
+                    if (currentAlgorithmType === 'Sorting') {
+                        currentAlgorithmGenerator = window[currentAlgorithmName + 'Generator']([...array]); // Use spread to pass a copy
+                    } else if (currentAlgorithmType === 'Searching') {
+                        let targetValue = parseInt(valueInput.value);
+                        if (isNaN(targetValue)) {
+                            showVisualizationMessage("Please enter a valid number for search value.", false);
+                            isVisualizing = false;
+                            startButton.textContent = 'Start';
+                            disableControls();
+                            return;
+                        }
+                        currentAlgorithmGenerator = window[currentAlgorithmName + 'Generator']([...array], targetValue);
+                    }
+                } else if (currentDataStructure === 'Stack') {
+                    if (currentAlgorithmName === 'stackPush') {
+                        let valueToAdd = parseInt(valueInput.value);
+                        if (isNaN(valueToAdd)) {
+                            showVisualizationMessage("Please enter a valid number to push.", false);
+                            isVisualizing = false;
+                            startButton.textContent = 'Start';
+                            disableControls();
+                            return;
+                        }
+                        currentAlgorithmGenerator = stackPushGenerator(currentStack, valueToAdd);
+                    } else if (currentAlgorithmName === 'stackPop') {
+                        currentAlgorithmGenerator = stackPopGenerator(currentStack);
+                    }
+                } else if (currentDataStructure === 'Queue') {
+                    if (currentAlgorithmName === 'queueEnqueue') {
+                        let valueToAdd = parseInt(valueInput.value);
+                        if (isNaN(valueToAdd)) {
+                            showVisualizationMessage("Please enter a valid number to enqueue.", false);
+                            isVisualizing = false;
+                            startButton.textContent = 'Start';
+                            disableControls();
+                            return;
+                        }
+                        currentAlgorithmGenerator = queueEnqueueGenerator(currentQueue, valueToAdd);
+                    } else if (currentAlgorithmName === 'queueDequeue') {
+                        currentAlgorithmGenerator = queueDequeueGenerator(currentQueue);
+                    }
+                } else if (currentDataStructure === 'LinkedList') {
+                    if (currentAlgorithmName === 'linkedListAddHead') {
+                        let valueToAdd = parseInt(valueInput.value);
+                        if (isNaN(valueToAdd)) {
+                            showVisualizationMessage("Please enter a valid number to add.", false);
+                            isVisualizing = false;
+                            startButton.textContent = 'Start';
+                            disableControls();
+                            return;
+                        }
+                        currentAlgorithmGenerator = linkedListAddHeadGenerator(currentLinkedList, valueToAdd);
+                    } else if (currentAlgorithmName === 'linkedListAddTail') {
+                        let valueToAdd = parseInt(valueInput.value);
+                        if (isNaN(valueToAdd)) {
+                            showVisualizationMessage("Please enter a valid number to add.", false);
+                            isVisualizing = false;
+                            startButton.textContent = 'Start';
+                            disableControls();
+                            return;
+                        }
+                        currentAlgorithmGenerator = linkedListAddTailGenerator(currentLinkedList, valueToAdd);
+                    } else if (currentAlgorithmName === 'linkedListDeleteHead') { // Changed
+                        currentAlgorithmGenerator = linkedListDeleteHeadGenerator(currentLinkedList); // No value needed
+                    } else if (currentAlgorithmName === 'linkedListDeleteTail') { // Changed
+                        currentAlgorithmGenerator = linkedListDeleteTailGenerator(currentLinkedList); // No value needed
+                    } else if (currentAlgorithmName === 'linkedListTraversal') { 
+                        currentAlgorithmGenerator = linkedListTraversalGenerator(currentLinkedList);
+                    }
+                }
+                
+                // Start the animation loop, but with a slight delay to ensure UI updates
+                animationFrameId = requestAnimationFrame(runGeneratorStep); 
+            } else if (isVisualizing && !isPaused) {
+                // Currently running, click to Pause
+                isPaused = true;
+                startButton.textContent = 'Resume';
+                cancelAnimationFrame(animationFrameId); // Pause the animation frame
+                animationFrameId = null; // Clear ID to prevent further requests until resumed
+                disableControls(); 
+                showVisualizationMessage("Visualization Paused.", true);
+            } else if (isVisualizing && isPaused) {
+                // Currently paused, click to Resume
+                isPaused = false;
+                startButton.textContent = 'Pause';
+                hideVisualizationMessage();
+                disableControls(); 
+                animationFrameId = requestAnimationFrame(runGeneratorStep); // Resume the visualization loop
+            }
+        }
+
+        /** Main generator runner for algorithms */
+        async function runGeneratorStep() {
+            if (animationFrameId === null && isVisualizing) {
+                return;
+            }
+
+            if (!isPaused) {
+                const { value, done } = await currentAlgorithmGenerator.next();
+
+                if (done) {
+                    isVisualizing = false;
+                    isPaused = false; 
+                    startButton.textContent = 'Start';
+                    disableControls(); 
+                    if (value && value.message) {
+                        showVisualizationMessage(value.message, true);
+                    } else {
+                        showVisualizationMessage("Algorithm finished!", true);
+                    }
+                    
+                    // Final render for sorting algorithms to ensure all bars are 'sorted'
+                    if (currentDataStructure === 'Array' && currentAlgorithmType === 'Sorting') {
+                        renderArrayBars(array, -1, -1, -1, array.length - 1); 
+                    }
+                    // Final render for other data structures to remove highlights
+                    // Ensure the state passed is clean (no highlight, no deleting etc.)
+                    if (currentDataStructure === 'Stack') {
+                        renderStack(currentStack, -1); // Pass -1 to clear highlight
+                    } else if (currentDataStructure === 'Queue') {
+                        renderQueue(currentQueue, -1); // Pass -1 to clear highlight
+                    } else if (currentDataStructure === 'LinkedList') {
+                        renderLinkedList(currentLinkedList, null, null, null); // Pass nulls to clear highlights
+                        // Ensure traversal output is cleared when animation finishes unless it's traversal itself
+                        if (currentAlgorithmName !== 'linkedListTraversal') {
+                            clearTraversalOutput();
+                        }
+                    }
+                    animationFrameId = null; 
+                    return;
+                }
+
+                // Handle visualization based on current data structure
+                if (currentDataStructure === 'Array') {
+                    const { arr, highlightA, highlightB, pivot, sortedTill, foundIndex, target, message } = value;
+                    array = [...arr]; 
+                    renderArrayBars(array, highlightA, highlightB, pivot, sortedTill, foundIndex, target);
+                    if (message) {
+                        showVisualizationMessage(message, true);
+                    } else {
+                        hideVisualizationMessage();
+                    }
+                } else if (currentDataStructure === 'Stack') {
+                    const { stack, highlightIndex, message } = value;
+                    renderStack(stack, highlightIndex);
+                    if (message) {
+                        showVisualizationMessage(message, true);
+                    } else {
+                        hideVisualizationMessage();
+                    }
+                } else if (currentDataStructure === 'Queue') {
+                    const { queue, highlightIndex, message } = value;
+                    renderQueue(queue, highlightIndex);
+                    if (message) {
+                        showVisualizationMessage(message, true);
+                    } else {
+                        hideVisualizationMessage();
+                    }
+                } else if (currentDataStructure === 'LinkedList') {
+                    const { linkedList, highlightNode, targetNode, deletingNode, message, traversalData } = value; // Added traversalData
+                    renderLinkedList(linkedList, highlightNode, targetNode, deletingNode);
+                    if (message) {
+                        showVisualizationMessage(message, true);
+                    } else {
+                        hideVisualizationMessage();
+                    }
+                    if (currentAlgorithmName === 'linkedListTraversal' && traversalData) { 
+                        linkedlistTraversalOutput.textContent = `Traversal: [${traversalData.join(' -> ')}]`;
+                        linkedlistTraversalOutput.style.display = 'block';
+                    } else {
+                        clearTraversalOutput(); // Hide if not traversal
+                    }
+                }
+            }
+            
+            if (isVisualizing) { 
+                animationFrameId = requestAnimationFrame(runGeneratorStep);
+            }
+        }
+
+        // --- Data Structure Implementations ---
+
+        // Stack Class
+        class Stack {
+            constructor() {
+                this.elements = [];
+            }
+            push(item) {
+                this.elements.push(item);
+            }
+            pop() {
+                if (this.isEmpty()) {
+                    return null;
+                }
+                return this.elements.pop();
+            }
+            peek() {
+                if (this.isEmpty()) {
+                    return null;
+                }
+                return this.elements[this.elements.length - 1];
+            }
+            isEmpty() {
+                return this.elements.length === 0;
+            }
+            size() {
+                return this.elements.length;
+            }
+            toArray() {
+                return [...this.elements];
+            }
+        }
+
+        // Queue Class
+        class Queue {
+            constructor() {
+                this.elements = [];
+            }
+            enqueue(item) {
+                this.elements.push(item);
+            }
+            dequeue() {
+                if (this.isEmpty()) {
+                    return null;
+                }
+                return this.elements.shift();
+            }
+            front() {
+                if (this.isEmpty()) {
+                    return null;
+                }
+                return this.elements[0];
+            }
+            isEmpty() {
+                return this.elements.length === 0;
+            }
+            size() {
+                return this.elements.length;
+            }
+            toArray() {
+                return [...this.elements];
+            }
+        }
+
+        // Linked List Classes (New)
+        class Node {
+            constructor(value) {
+                this.value = value;
+                this.next = null;
+            }
+        }
+
+        class LinkedList {
+            constructor() {
+                this.head = null;
+                this.tail = null;
+                this.size = 0;
+            }
+
+            addAtHead(value) {
+                const newNode = new Node(value);
+                if (!this.head) {
+                    this.head = newNode;
+                    this.tail = newNode;
+                } else {
+                    newNode.next = this.head;
+                    this.head = newNode;
+                }
+                this.size++;
+            }
+
+            addAtTail(value) {
+                const newNode = new Node(value);
+                if (!this.tail) {
+                    this.head = newNode;
+                    this.tail = newNode;
+                } else {
+                    this.tail.next = newNode;
+                    this.tail = newNode;
+                }
+                this.size++;
+            }
+
+            // New: Delete at Head
+            deleteAtHead() {
+                if (!this.head) {
+                    return null; // List is empty
+                }
+                const deletedNode = this.head;
+                this.head = this.head.next;
+                if (!this.head) { // If list became empty
+                    this.tail = null;
+                }
+                this.size--;
+                return deletedNode;
+            }
+
+            // New: Delete at Tail
+            deleteAtTail() {
+                if (!this.head) {
+                    return null; // List is empty
+                }
+                if (this.head === this.tail) { // Only one node
+                    const deletedNode = this.head;
+                    this.head = null;
+                    this.tail = null;
+                    this.size--;
+                    return deletedNode;
+                }
+
+                let current = this.head;
+                let prev = null;
+                while (current.next) {
+                    prev = current;
+                    current = current.next;
+                }
+                // current is now the tail, prev is the second-to-last node
+                prev.next = null;
+                this.tail = prev;
+                this.size--;
+                return current; // Return the deleted node (which was current)
+            }
+
+
+            toArray() {
+                const arr = [];
+                let current = this.head;
+                while (current) {
+                    arr.push(current.value);
+                    current = current.next;
+                }
+                return arr;
+            }
+            
+            fromArray(arr) { // Helper to quickly build a list
+                this.head = null;
+                this.tail = null;
+                this.size = 0;
+                arr.forEach(val => this.addAtTail(val));
+            }
+
+            // Method to find a node by value (useful for highlighting) - potentially still useful for future search ops
+            findNodeByValue(value) {
+                let current = this.head;
+                while (current) {
+                    if (current.value === value) {
+                        return current;
+                    }
+                    current = current.next;
+                }
+                return null;
+            }
+            isEmpty() {
+                return this.head === null;
+            }
+        }
+
+
+        // --- Render Functions for Stack/Queue/LinkedList ---
+
+        function renderStack(stack, highlightIndex = -1) {
+            stackContainer.innerHTML = '';
+            const stackArray = stack.toArray();
+            stackArray.forEach((item, index) => {
+                const elementDiv = document.createElement('div');
+                elementDiv.classList.add('stack-element');
+                elementDiv.textContent = item;
+                if (index === highlightIndex) {
+                    elementDiv.classList.add('highlight');
+                }
+                stackContainer.appendChild(elementDiv);
+            });
+            // Show message only if stack is empty AND not actively visualizing
+            if (stack.isEmpty() && !isVisualizing) { 
+                showVisualizationMessage("Stack is Empty.", true);
+            } else if (!stack.isEmpty() && !isVisualizing && visualizationMessage.style.display !== 'none') {
+                // If message was "Stack is Empty" but now it's not and no visualization is running
+                hideVisualizationMessage();
+            }
+            // During visualization, messages come from the generator, so the general message is hidden
+            if (isVisualizing) {
+                hideVisualizationMessage();
+            }
+        }
+
+        function renderQueue(queue, highlightIndex = -1) {
+            queueContainer.innerHTML = '';
+            const queueArray = queue.toArray();
+            
+            // Add labels for front/rear before elements if queue is not empty
+            if (!queue.isEmpty()) {
+                const frontLabel = document.createElement('div');
+                frontLabel.classList.add('queue-front-label');
+                frontLabel.textContent = 'Front';
+                queueContainer.appendChild(frontLabel); 
+            }
+
+            queueArray.forEach((item, index) => {
+                const elementDiv = document.createElement('div');
+                elementDiv.classList.add('queue-element');
+                elementDiv.textContent = item;
+                if (index === highlightIndex) { 
+                    elementDiv.classList.add('highlight');
+                }
+                queueContainer.appendChild(elementDiv);
+            });
+
+            if (!queue.isEmpty()) {
+                const rearLabel = document.createElement('div');
+                rearLabel.classList.add('queue-rear-label');
+                rearLabel.textContent = 'Rear';
+                queueContainer.appendChild(rearLabel);
+            }
+
+            // Show message only if queue is empty AND not actively visualizing
+            if (queue.isEmpty() && !isVisualizing) {
+                showVisualizationMessage("Queue is Empty.", true);
+            } else if (!queue.isEmpty() && !isVisualizing && visualizationMessage.style.display !== 'none') {
+                // If message was "Queue is Empty" but now it's not and no visualization is running
+                hideVisualizationMessage();
+            }
+            // During visualization, messages come from the generator, so the general message is hidden
+            if (isVisualizing) {
+                hideVisualizationMessage();
+            }
+        }
+
+        function renderLinkedList(linkedList, highlightNode = null, targetNode = null, deletingNode = null) {
+            linkedlistContainer.innerHTML = '';
+            let current = linkedList.head;
+
+            // Show "Linked List is Empty" message only if truly empty and not actively visualizing
+            if (!current && !isVisualizing) {
+                showVisualizationMessage("Linked List is Empty.", true);
+                return;
+            } else if (current && !isVisualizing && visualizationMessage.style.display !== 'none') {
+                // If message was "Linked List is Empty" but now it's not and no visualization is running
+                hideVisualizationMessage();
+            }
+
+            while (current) {
+                const nodeWrapper = document.createElement('div');
+                nodeWrapper.classList.add('ll-node-wrapper');
+
+                const nodeDiv = document.createElement('div');
+                nodeDiv.classList.add('ll-node');
+                nodeDiv.textContent = current.value;
+
+                if (current === highlightNode) {
+                    nodeDiv.classList.add('highlight');
+                }
+                // targetNode is not used in delete at head/tail, but kept for potential future use
+                if (current === targetNode) {
+                    nodeDiv.classList.add('target-found');
+                }
+                if (current === deletingNode) {
+                    nodeDiv.classList.add('deleting');
+                }
+
+                nodeWrapper.appendChild(nodeDiv);
+
+                if (current.next) {
+                    const arrowDiv = document.createElement('div');
+                    arrowDiv.classList.add('ll-arrow');
+                    nodeWrapper.appendChild(arrowDiv);
+                }
+                linkedlistContainer.appendChild(nodeWrapper);
+                current = current.next;
+            }
+            // During visualization, messages come from the generator, so the general message is hidden
+            if (isVisualizing) {
+                hideVisualizationMessage();
+            }
+        }
+
+
+        // --- Algorithm Implementations (Generators) ---
+
+        // Array Sorting Algorithms 
+        async function* bubbleSortGenerator(arr) {
+            let n = arr.length;
+            for (let i = 0; i < n - 1; i++) {
+                for (let j = 0; j < n - i - 1; j++) {
+                    yield { arr: arr, highlightA: j, highlightB: j + 1, sortedTill: i, message: `Comparing ${arr[j].value} and ${arr[j+1].value}` };
+                    await sleep(animationSpeed);
+                    if (arr[j].value > arr[j + 1].value) {
+                        yield { arr: arr, highlightA: j, highlightB: j + 1, type: 'swapping', sortedTill: i, message: `Swapping ${arr[j].value} and ${arr[j+1].value}` };
+                        await sleep(animationSpeed);
+                        [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
+                    }
+                }
+            }
+            yield { arr: arr, type: 'finished', sortedTill: n - 1, message: "Bubble Sort Complete!" };
+        }
+
+        async function* selectionSortGenerator(arr) {
+            let n = arr.length;
+            for (let i = 0; i < n - 1; i++) {
+                let minIdx = i;
+                yield { arr: arr, highlightA: i, message: `Setting ${arr[i].value} as current minimum.` };
+                await sleep(animationSpeed);
+
+                for (let j = i + 1; j < n; j++) {
+                    yield { arr: arr, highlightA: minIdx, highlightB: j, sortedTill: i, message: `Comparing current min ${arr[minIdx].value} with ${arr[j].value}.` };
+                    await sleep(animationSpeed);
+                    if (arr[j].value < arr[minIdx].value) {
+                        minIdx = j;
+                        yield { arr: arr, highlightA: minIdx, message: `New minimum found: ${arr[minIdx].value}` };
+                        await sleep(animationSpeed);
+                    }
+                }
+
+                if (minIdx !== i) {
+                    yield { arr: arr, highlightA: i, highlightB: minIdx, type: 'swapping', sortedTill: i, message: `Swapping ${arr[i].value} and new min ${arr[minIdx].value}.` };
+                    await sleep(animationSpeed);
+                    [arr[i], arr[minIdx]] = [arr[minIdx], arr[i]];
+                }
+            }
+            yield { arr: arr, type: 'finished', sortedTill: n - 1, message: "Selection Sort Complete!" };
+        }
+
+        async function* insertionSortGenerator(arr) {
+            let n = arr.length;
+            for (let i = 1; i < n; i++) {
+                let key = arr[i];
+                let j = i - 1;
+
+                yield { arr: arr, highlightA: i, sortedTill: i - 1, message: `Picking ${key.value} as key.` };
+                await sleep(animationSpeed);
+
+                while (j >= 0 && arr[j].value > key.value) {
+                    yield { arr: arr, highlightA: j + 1, highlightB: j, sortedTill: i, message: `Shifting ${arr[j].value} right.` };
+                    await sleep(animationSpeed);
+                    arr[j + 1] = arr[j];
+                    j = j - 1;
+                }
+                arr[j + 1] = key;
+                yield { arr: arr, highlightA: j + 1, sortedTill: i, message: `Placing ${key.value} in sorted position.` };
+                await sleep(animationSpeed);
+            }
+            yield { arr: arr, type: 'finished', sortedTill: n - 1, message: "Insertion Sort Complete!" };
+        }
+
+        async function* mergeSortGenerator(arr, l = 0, r = arr.length - 1) {
+            if (l >= r) {
+                return;
+            }
+            const m = l + Math.floor((r - l) / 2);
+            yield* mergeSortGenerator(arr, l, m);
+            yield* mergeSortGenerator(arr, m + 1, r);
+            yield* merge(arr, l, m, r);
+            if (l === 0 && r === arr.length - 1) {
+                yield { arr: arr, type: 'finished', sortedTill: arr.length - 1, message: "Merge Sort Complete!" };
+            }
+        }
+
+        async function* merge(arr, l, m, r) {
+            let n1 = m - l + 1;
+            let n2 = r - m;
+
+            let L = new Array(n1);
+            let R = new Array(n2);
+
+            for (let i = 0; i < n1; i++) {
+                L[i] = arr[l + i];
+            }
+            for (let j = 0; j < n2; j++) {
+                R[j] = arr[m + 1 + j];
+            }
+
+            let i = 0, j = 0, k = l;
+            while (i < n1 && j < n2) {
+                yield { arr: arr, highlightA: k, highlightB: l + i, type: 'merging', message: `Merging: Comparing ${L[i].value} and ${R[j].value}.` };
+                await sleep(animationSpeed);
+                if (L[i].value <= R[j].value) {
+                    arr[k] = L[i];
+                } else {
+                    arr[k] = R[j];
+                }
+                yield { arr: arr, highlightA: k, type: 'merging', message: `Merging: Placed ${arr[k].value}.` };
+                await sleep(animationSpeed);
+                k++;
+            }
+
+            while (i < n1) {
+                arr[k] = L[i];
+                yield { arr: arr, highlightA: k, type: 'merging', message: `Merging remaining: Placed ${arr[k].value}.` };
+                await sleep(animationSpeed);
+                i++;
+                k++;
+            }
+
+            while (j < n2) {
+                arr[k] = R[j];
+                yield { arr: arr, highlightA: k, type: 'merging', message: `Merging remaining: Placed ${arr[k].value}.` };
+                await sleep(animationSpeed);
+                j++;
+                k++;
+            }
+            yield { arr: arr, highlightA: -1, highlightB: -1, message: `Merged segment from ${l} to ${r}.` };
+            await sleep(animationSpeed);
+        }
+
+        async function* quickSortGenerator(arr, low = 0, high = arr.length - 1) {
+            if (low < high) {
+                const pi = yield* partition(arr, low, high);
+                yield* quickSortGenerator(arr, low, pi - 1);
+                yield* quickSortGenerator(arr, pi + 1, high);
+            }
+            if (low === 0 && high === arr.length - 1) { // Only yield finished on initial call completion
+                yield { arr: arr, type: 'finished', sortedTill: arr.length - 1, message: "Quick Sort Complete!" };
+            }
+        }
+
+        async function* partition(arr, low, high) {
+            const pivot = arr[high];
+            yield { arr: arr, pivot: high, message: `Pivot selected: ${pivot.value}` };
+            await sleep(animationSpeed * 1.5);
+
+            let i = (low - 1); // Index of smaller element
+            for (let j = low; j <= high - 1; j++) {
+                yield { arr: arr, highlightA: j, highlightB: i + 1, pivot: high, message: `Comparing ${arr[j].value} with pivot ${pivot.value}.` };
+                await sleep(animationSpeed);
+
+                if (arr[j].value < pivot.value) {
+                    i++;
+                    yield { arr: arr, highlightA: j, highlightB: i, type: 'swapping', pivot: high, message: `Swapping ${arr[j].value} and ${arr[i].value}.` };
+                    await sleep(animationSpeed);
+                    [arr[i], arr[j]] = [arr[j], arr[i]];
+                }
+            }
+            yield { arr: arr, highlightA: i + 1, highlightB: high, type: 'swapping', pivot: high, message: `Placing pivot ${pivot.value} in correct position.` };
+            await sleep(animationSpeed);
+            [arr[i + 1], arr[high]] = [arr[high], arr[i + 1]];
+            
+            yield { arr: arr, sortedTill: i + 1, message: `Pivot ${pivot.value} placed at index ${i + 1}.` };
+            await sleep(animationSpeed);
+            return i + 1;
+        }
+
+        // --- Merge Sort Implementation ---
+        async function* mergeSortGenerator(arr, l = 0, r = arr.length - 1) {
+            if (l < r) {
+                const m = Math.floor((l + r) / 2);
+                yield* mergeSortGenerator(arr, l, m);
+                yield* mergeSortGenerator(arr, m + 1, r);
+                yield* mergeGenerator(arr, l, m, r);
+            }
+        }
+
+        async function* mergeGenerator(arr, l, m, r) {
+            const n1 = m - l + 1;
+            const n2 = r - m;
+
+            // Create temp arrays
+            const L = new Array(n1);
+            const R = new Array(n2);
+
+            // Copy data to temp arrays L[] and R[]
+            for (let i = 0; i < n1; i++) {
+                L[i] = arr[l + i];
+            }
+            for (let j = 0; j < n2; j++) {
+                R[j] = arr[m + 1 + j];
+            }
+
+            // Merge the temp arrays back into arr[l..r]
+            let i = 0; // Initial index of first subarray
+            let j = 0; // Initial index of second subarray
+            let k = l; // Initial index of merged subarray
+
+            while (i < n1 && j < n2) {
+                // Highlight elements being compared from L and R (conceptually)
+                // In actual array, these correspond to arr[l+i] and arr[m+1+j]
+                yield { arr: [...arr], highlightA: l + i, highlightB: m + 1 + j, message: `Comparing ${L[i].value} and ${R[j].value}` };
+                await sleep(animationSpeed);
+
+                if (L[i].value <= R[j].value) {
+                    arr[k] = L[i];
+                    i++;
+                } else {
+                    arr[k] = R[j];
+                    j++;
+                }
+                // Highlight the element being placed
+                yield { arr: [...arr], highlightA: k, highlightB: -1, message: `Placing ${arr[k].value}` };
+                await sleep(animationSpeed);
+                k++;
+            }
+
+            // Copy the remaining elements of L[], if there are any
+            while (i < n1) {
+                arr[k] = L[i];
+                yield { arr: [...arr], highlightA: k, highlightB: -1, message: `Placing remaining ${arr[k].value} from left` };
+                await sleep(animationSpeed);
+                i++;
+                k++;
+            }
+
+            // Copy the remaining elements of R[], if there are any
+            while (j < n2) {
+                arr[k] = R[j];
+                yield { arr: [...arr], highlightA: k, highlightB: -1, message: `Placing remaining ${arr[k].value} from right` };
+                await sleep(animationSpeed);
+                j++;
+                k++;
+            }
+            // After merge, mark the whole merged segment as 'merging' temporarily or sorted if it's the final pass
+            // For full visualization, you might want to show this range as sorted progressively.
+            // For now, no specific 'merging' color, just the final sorted state at the end.
+        }
+
+        // Array Searching Algorithms 
+        async function* linearSearchGenerator(arr, target) {
+            for (let i = 0; i < arr.length; i++) {
+                yield { arr: arr, highlightA: i, target: target, message: `Checking index ${i}: Is ${arr[i].value} == ${target}?` };
+                await sleep(animationSpeed);
+                if (arr[i].value === target) {
+                    yield { arr: arr, foundIndex: i, target: target, message: `Found ${target} at index ${i}!` };
+                    await sleep(animationSpeed * 2);
+                    yield { arr: arr, type: 'finished', foundIndex: i, target: target, message: "Linear Search Complete!" };
+                    return;
+                }
+            }
+            yield { arr: arr, foundIndex: -1, target: target, message: `${target} Not Found!` };
+            yield { arr: arr, type: 'finished', foundIndex: -1, target: target, message: "Linear Search Complete!" };
+        }
+
+
+        // Stack Operations
+        async function* stackPushGenerator(stack, value) {
+            yield { stack: stack, message: `Preparing to push ${value}...` };
+            await sleep(animationSpeed * 1.5);
+            stack.push(value);
+            yield { stack: stack, highlightIndex: stack.size() - 1, message: `Pushed ${value} onto stack.` };
+            await sleep(animationSpeed * 2);
+            yield { stack: stack, type: 'finished', highlightIndex: -1, message: `Push operation complete.` }; // Clear highlight
+        }
+
+        async function* stackPopGenerator(stack) {
+            if (stack.isEmpty()) {
+                yield { stack: stack, message: "Stack is empty. Cannot pop.", type: 'error' };
+                yield { stack: stack, type: 'finished', highlightIndex: -1, message: "Pop operation failed (Stack Empty)." }; // Clear any potential highlight
+                return;
+            }
+            const poppedValue = stack.peek(); // Peek before popping to get value
+            yield { stack: stack, highlightIndex: stack.size() - 1, message: `Preparing to pop ${poppedValue}...` };
+            await sleep(animationSpeed * 1.5);
+            stack.pop(); // Actual pop
+            // Immediately yield the state after pop without highlight for a brief moment
+            yield { stack: stack, highlightIndex: -1, message: `Popped ${poppedValue} from stack.` };
+            await sleep(animationSpeed * 2);
+            yield { stack: stack, type: 'finished', highlightIndex: -1, message: `Pop operation complete.` }; // Final state, clear highlight
+        }
+
+        // Queue Operations
+        async function* queueEnqueueGenerator(queue, value) {
+            yield { queue: queue, message: `Preparing to enqueue ${value}...` };
+            await sleep(animationSpeed * 1.5);
+            queue.enqueue(value);
+            yield { queue: queue, highlightIndex: queue.size() - 1, message: `Enqueued ${value} to queue.` };
+            await sleep(animationSpeed * 2);
+            yield { queue: queue, type: 'finished', highlightIndex: -1, message: `Enqueue operation complete.` }; // Clear highlight
+        }
+
+        async function* queueDequeueGenerator(queue) {
+            if (queue.isEmpty()) {
+                yield { queue: queue, message: "Queue is empty. Cannot dequeue.", type: 'error' };
+                yield { queue: queue, type: 'finished', highlightIndex: -1, message: "Dequeue operation failed (Queue Empty)." }; // Clear any potential highlight
+                return;
+            }
+            const dequeuedValue = queue.front(); // Peek before dequeuing
+            yield { queue: queue, highlightIndex: 0, message: `Preparing to dequeue ${dequeuedValue}...` };
+            await sleep(animationSpeed * 1.5);
+            queue.dequeue(); // Actual dequeue
+            // Immediately yield the state after dequeue without highlight for a brief moment
+            yield { queue: queue, highlightIndex: -1, message: `Dequeued ${dequeuedValue} from queue.` };
+            await sleep(animationSpeed * 2);
+            yield { queue: queue, type: 'finished', highlightIndex: -1, message: `Dequeue operation complete.` }; // Final state, clear highlight
+        }
+
+        // Linked List Operations
+        async function* linkedListAddHeadGenerator(linkedList, value) {
+            yield { linkedList: linkedList, message: `Preparing to add ${value} to head...` };
+            await sleep(animationSpeed * 1.5);
+            linkedList.addAtHead(value);
+            // Highlight the new head node (which is now linkedList.head)
+            yield { linkedList: linkedList, highlightNode: linkedList.head, message: `Added ${value} at head.` };
+            await sleep(animationSpeed * 2);
+            yield { linkedList: linkedList, type: 'finished', highlightNode: null, message: `Add to Head operation complete.` }; // Clear highlight
+        }
+
+        async function* linkedListAddTailGenerator(linkedList, value) {
+            yield { linkedList: linkedList, message: `Preparing to add ${value} to tail...` };
+            await sleep(animationSpeed * 1.5);
+
+            if (linkedList.head) {
+                // Show traversal to the end if not empty
+                let current = linkedList.head;
+                while (current.next) {
+                    yield { linkedList: linkedList, highlightNode: current, message: `Traversing to tail: checking ${current.value}.` };
+                    await sleep(animationSpeed);
+                    current = current.next;
+                }
+                yield { linkedList: linkedList, highlightNode: current, message: `Reached current tail: ${current.value}.` };
+                await sleep(animationSpeed);
+            }
+            
+            linkedList.addAtTail(value);
+            // Highlight the new tail node (which is now linkedList.tail)
+            yield { linkedList: linkedList, highlightNode: linkedList.tail, message: `Added ${value} at tail.` };
+            await sleep(animationSpeed * 2);
+            yield { linkedList: linkedList, type: 'finished', highlightNode: null, message: `Add to Tail operation complete.` }; // Clear highlight
+        }
+
+        // New: Linked List Delete at Head Generator
+        async function* linkedListDeleteHeadGenerator(linkedList) {
+            if (linkedList.isEmpty()) {
+                yield { linkedList: linkedList, message: "Linked List is empty. Cannot delete from head.", type: 'error' };
+                yield { linkedList: linkedList, type: 'finished', highlightNode: null, deletingNode: null, message: "Delete at Head operation failed (List Empty)." };
+                return;
+            }
+
+            const headNode = linkedList.head;
+            yield { linkedList: linkedList, highlightNode: headNode, message: `Preparing to delete head node: ${headNode.value}...` };
+            await sleep(animationSpeed * 1.5);
+
+            // Show deleting animation
+            yield { linkedList: linkedList, deletingNode: headNode, message: `Deleting ${headNode.value}...` };
+            await sleep(animationSpeed * 1.5);
+
+            const deletedValue = linkedList.deleteAtHead();
+            
+            yield { linkedList: linkedList, highlightNode: null, deletingNode: null, message: `Deleted ${deletedValue.value} from head.` };
+            await sleep(animationSpeed * 2);
+            yield { linkedList: linkedList, type: 'finished', highlightNode: null, deletingNode: null, message: `Delete at Head operation complete.` };
+        }
+
+        // New: Linked List Delete at Tail Generator
+        async function* linkedListDeleteTailGenerator(linkedList) {
+            if (linkedList.isEmpty()) {
+                yield { linkedList: linkedList, message: "Linked List is empty. Cannot delete from tail.", type: 'error' };
+                yield { linkedList: linkedList, type: 'finished', highlightNode: null, deletingNode: null, message: "Delete at Tail operation failed (List Empty)." };
+                return;
+            }
+
+            if (linkedList.head === linkedList.tail) { // Only one node
+                const tailNode = linkedList.head;
+                yield { linkedList: linkedList, highlightNode: tailNode, message: `Only one node: ${tailNode.value}. Deleting it.` };
+                await sleep(animationSpeed * 1.5);
+
+                yield { linkedList: linkedList, deletingNode: tailNode, message: `Deleting ${tailNode.value}...` };
+                await sleep(animationSpeed * 1.5);
+
+                const deletedValue = linkedList.deleteAtTail();
+                yield { linkedList: linkedList, highlightNode: null, deletingNode: null, message: `Deleted ${deletedValue.value} from tail.` };
+                await sleep(animationSpeed * 2);
+                yield { linkedList: linkedList, type: 'finished', highlightNode: null, deletingNode: null, message: `Delete at Tail operation complete.` };
+                return;
+            }
+
+            yield { linkedList: linkedList, message: `Traversing to find second-to-last node for tail deletion...` };
+            await sleep(animationSpeed);
+
+            let current = linkedList.head;
+            let prev = null;
+            while (current.next) {
+                yield { linkedList: linkedList, highlightNode: current, message: `Checking node: ${current.value}` };
+                await sleep(animationSpeed);
+                prev = current;
+                current = current.next;
+            }
+            // `current` is now the tail node, `prev` is the second-to-last
+
+            yield { linkedList: linkedList, highlightNode: current, message: `Reached tail: ${current.value}. Preparing to delete.` };
+            await sleep(animationSpeed * 1.5);
+
+            yield { linkedList: linkedList, deletingNode: current, message: `Deleting ${current.value}...` };
+            await sleep(animationSpeed * 1.5);
+
+            const deletedValue = linkedList.deleteAtTail(); // This will correctly update head/tail/size
+            
+            yield { linkedList: linkedList, highlightNode: null, deletingNode: null, message: `Deleted ${deletedValue.value} from tail.` };
+            await sleep(animationSpeed * 2);
+            yield { linkedList: linkedList, type: 'finished', highlightNode: null, deletingNode: null, message: `Delete at Tail operation complete.` };
+        }
+
+
+        // New Linked List Traversal Operation
+        async function* linkedListTraversalGenerator(linkedList) {
+            if (linkedList.isEmpty()) {
+                yield { linkedList: linkedList, message: "Linked List is empty. Nothing to traverse.", type: 'error', traversalData: [] };
+                yield { linkedList: linkedList, type: 'finished', highlightNode: null, traversalData: [] };
+                return;
+            }
+
+            yield { linkedList: linkedList, message: `Starting traversal...`, traversalData: [] };
+            await sleep(animationSpeed);
+
+            let current = linkedList.head;
+            let traversedValues = [];
+
+            while (current) {
+                traversedValues.push(current.value);
+                yield { 
+                    linkedList: linkedList, 
+                    highlightNode: current, 
+                    message: `Visiting node: ${current.value}`,
+                    traversalData: traversedValues 
+                };
+                await sleep(animationSpeed * 1.5); // Longer pause for each node visit
+                current = current.next;
+            }
+
+            yield { 
+                linkedList: linkedList, 
+                type: 'finished', 
+                highlightNode: null, 
+                message: "Traversal complete!",
+                traversalData: traversedValues 
+            };
+        }
+
+
+        // --- Event Listeners ---
+
+        arraySizeInput.addEventListener('input', () => {
+            arraySize = parseInt(arraySizeInput.value);
+            arraySizeValueSpan.textContent = arraySize;
+            // If the current DS is Array and we're not running, or if paused, update immediately
+            if (currentDataStructure === 'Array' && (!isVisualizing || isPaused)) {
+                array = generateArray(arraySize);
+                renderArrayBars(array);
+                if (isPaused) { // If paused, just update the visual, don't restart generator
+                    showVisualizationMessage("Array size changed. Ready to resume.", true);
+                } else {
+                    showVisualizationMessage("Array size updated. Ready to visualize.", true);
+                }
+            }
+        });
+
+        animationSpeedInput.addEventListener('input', () => {
+            animationSpeed = parseInt(animationSpeedInput.value);
+            animationSpeedValueSpan.textContent = animationSpeed;
+        });
+
+        dataStructureSelect.addEventListener('change', () => {
+            currentDataStructure = dataStructureSelect.value;
+            updateAlgorithmDropdown(); // Update dropdown options first
+            initVisualization('ds_change'); // Then initialize the new data structure
+        });
+
+        algorithmSelect.addEventListener('change', () => {
+            currentAlgorithmName = algorithmSelect.value; // Update current algorithm name immediately
+            updateAlgorithmControls(); // This will determine value input visibility
+
+            // Crucial: Only re-initialize the DS (e.g., clear the list) if we are switching to a new DS type.
+            // If we are changing algorithm *within* the same DS, we want to preserve its state.
+            if (!isVisualizing) { 
+                if (currentDataStructure === 'LinkedList') {
+                    // Always re-render the current list to ensure highlights/messages are correct
+                    renderLinkedList(currentLinkedList); 
+                    // Special handling for traversal output visibility
+                    if (currentAlgorithmName === 'linkedListTraversal') {
+                        linkedlistTraversalOutput.style.display = 'block'; // Make output visible if traversal is selected
+                        linkedlistTraversalOutput.textContent = `Traversal: [${currentLinkedList.toArray().join(' -> ')}]`; // Show current list state
+                        if (currentLinkedList.isEmpty()) {
+                            linkedlistTraversalOutput.textContent = "Traversal: (List is empty)";
+                        }
+                    } else {
+                        clearTraversalOutput(); // Ensure output is clear unless traversal is selected
+                    }
+                }
+                // Re-render for Stack/Queue if needed, primarily to refresh "Empty" message visibility
+                else if (currentDataStructure === 'Stack') {
+                    renderStack(currentStack);
+                } else if (currentDataStructure === 'Queue') {
+                    renderQueue(currentQueue);
+                }
+                hideVisualizationMessage(); // Clear any old messages
+                showVisualizationMessage("Ready to visualize " + currentAlgorithmName.replace(/([A-Z])/g, ' $1').trim() + ".", true);
+            } 
+        });
+
+        startButton.addEventListener('click', toggleVisualization); 
+
+        resetButton.addEventListener('click', () => initVisualization('reset')); 
+
+
+        // --- Initial Setup Functions ---
+
+        /** Updates the algorithm dropdown based on selected data structure */
+        function updateAlgorithmDropdown() {
+            algorithmSelect.innerHTML = ''; // Clear previous options
+            
+            const ds = dataStructureMap[currentDataStructure];
+            if (ds) {
+                for (const type in ds.types) {
+                    const optgroup = document.createElement('optgroup');
+                    optgroup.label = type;
+                    ds.types[type].forEach(algo => {
+                        const option = document.createElement('option');
+                        option.value = algo.value;
+                        option.textContent = algo.text;
+                        optgroup.appendChild(option);
+                    });
+                    algorithmSelect.appendChild(optgroup);
+                }
+            }
+            // After updating dropdown, ensure controls are correct for the newly selected default algorithm
+            // Also set currentAlgorithmName for initVisualization to use.
+            currentAlgorithmName = algorithmSelect.value;
+            updateAlgorithmControls(); 
+        }
+
+        /** Updates controls visibility and sets current algorithm details */
+        function updateAlgorithmControls() {
+            // currentAlgorithmName is already updated in algorithmSelect.addEventListener or updateAlgorithmDropdown
+            
+            let foundType = '';
+            const currentDS = dataStructureMap[currentDataStructure];
+            if (currentDS && currentDS.types) {
+                for (const type in currentDS.types) {
+                    if (currentDS.types[type].some(algo => algo.value === currentAlgorithmName)) {
+                        foundType = type;
+                        break;
+                    }
+                }
+            }
+            currentAlgorithmType = foundType;
+
+            // Hide all special input groups first
+            arraySizeControl.style.display = 'none';
+            dsValueInputGroup.style.display = 'none';
+            linkedlistTraversalOutput.style.display = 'none'; // Hide traversal output by default
+
+            valueInput.min = '1';
+            valueInput.max = '100'; // Default range
+            valueInput.value = '50'; // Default value for adding/searching
+
+            if (currentDataStructure === 'Array') {
+                arraySizeControl.style.display = 'flex';
+                if (currentAlgorithmType === 'Searching') {
+                    dsValueInputGroup.style.display = 'flex';
+                    valueInput.placeholder = 'Search Value (1-100)';
+                }
+            } else if (currentDataStructure === 'Stack' || currentDataStructure === 'Queue') {
+                if (currentAlgorithmName === 'stackPush' || currentAlgorithmName === 'queueEnqueue') {
+                    dsValueInputGroup.style.display = 'flex';
+                    valueInput.placeholder = 'Value to Add (1-100)';
+                } 
+            } else if (currentDataStructure === 'LinkedList') { 
+                if (currentAlgorithmName === 'linkedListAddHead' || currentAlgorithmName === 'linkedListAddTail') {
+                    dsValueInputGroup.style.display = 'flex';
+                    valueInput.placeholder = 'Value to Add (1-100)';
+                } else if (currentAlgorithmName === 'linkedListTraversal') {
+                    linkedlistTraversalOutput.style.display = 'block'; // Show output area for traversal
+                    linkedlistTraversalOutput.textContent = `Traversal: [${currentLinkedList.toArray().join(' -> ')}]`;
+                    if (currentLinkedList.isEmpty()) {
+                        linkedlistTraversalOutput.textContent = "Traversal: (List is empty)";
+                    }
+                }
+                // For delete operations, value input is not needed
+            }
+            disableControls(); // Re-enable controls if not visualizing
+        }
+
+        /** Initializes or resets the visualization area based on current settings 
+         * @param {string} trigger - 'initial_load', 'reset', 'ds_change'
+         */
+        function initVisualization(trigger = 'initial_load') {
+            if (animationFrameId) {
+                cancelAnimationFrame(animationFrameId); // Stop any ongoing animation
+                animationFrameId = null; // Clear the animation frame ID
+            }
+            isVisualizing = false;
+            isPaused = false; 
+            startButton.textContent = 'Start';
+            disableControls(); 
+            hideVisualizationMessage();
+            clearTraversalOutput(); // Always clear traversal output on full reset
+            currentAlgorithmGenerator = null; // Clear previous generator
+
+            // Remove specific alignment classes from visualization-area
+            visualizationArea.classList.remove('for-stack', 'for-queue');
+
+            // Hide all visualizer containers
+            arrayBarsContainer.style.display = 'none';
+            stackContainer.style.display = 'none';
+            queueContainer.style.display = 'none';
+            linkedlistContainer.style.display = 'none';
+
+            // Reset data structure instances based on currentDataStructure
+            if (trigger === 'ds_change' || trigger === 'reset') {
+                if (currentDataStructure === 'Array') {
+                    array = generateArray(arraySize); 
+                    arrayBarsContainer.style.display = 'flex';
+                    renderArrayBars(array);
+                    showVisualizationMessage("Ready to visualize " + (currentAlgorithmName ? currentAlgorithmName.replace(/([A-Z])/g, ' $1').trim() : "Array algorithm") + ".", true);
+                } else if (currentDataStructure === 'Stack') {
+                    currentStack = new Stack(); 
+                    visualizationArea.classList.add('for-stack'); 
+                    stackContainer.style.display = 'flex';
+                    renderStack(currentStack);
+                    showVisualizationMessage("Stack ready. Click Push or Pop.", true);
+                } else if (currentDataStructure === 'Queue') {
+                    currentQueue = new Queue(); 
+                    visualizationArea.classList.add('for-queue'); 
+                    queueContainer.style.display = 'flex';
+                    renderQueue(currentQueue);
+                    showVisualizationMessage("Queue ready. Click Enqueue or Dequeue.", true);
+                } else if (currentDataStructure === 'LinkedList') { 
+                    currentLinkedList = new LinkedList(); // Always create a new empty list on DS change/reset
+                    linkedlistContainer.style.display = 'flex';
+                    // Populate with a default list for initial delete ops to make it easier
+                    if (currentAlgorithmName === 'linkedListDeleteHead' || currentAlgorithmName === 'linkedListDeleteTail') {
+                        currentLinkedList.fromArray([10, 20, 30, 40, 50]);
+                    }
+                    renderLinkedList(currentLinkedList); // Render the new (possibly empty or pre-filled) list
+                    if (currentAlgorithmName === 'linkedListTraversal') {
+                        linkedlistTraversalOutput.style.display = 'block';
+                        linkedlistTraversalOutput.textContent = `Traversal: [${currentLinkedList.toArray().join(' -> ')}]`;
+                        if (currentLinkedList.isEmpty()) {
+                            linkedlistTraversalOutput.textContent = "Traversal: (List is empty)";
+                        }
+                    }
+                    showVisualizationMessage("Linked List ready.", true);
+                }
+            } else if (trigger === 'initial_load') {
+                // On initial load, setup based on the default selected DS (Array)
+                array = generateArray(arraySize); 
+                arrayBarsContainer.style.display = 'flex';
+                renderArrayBars(array);
+                showVisualizationMessage("Ready to visualize Array algorithm.", true); // Initial message for Array
+            }
+            // If algorithm changes within the same DS type (not a full reset or DS change)
+            // The algorithmSelect.addEventListener will handle re-rendering and message updates.
+            // This prevents clearing a user-built list on just an algorithm change.
+        }
+
+        // --- Initial Setup on page load ---
+        let resizeTimer;
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                // Re-initialize only if not visualizing to avoid interrupting a live animation.
+                // If it's Array, we just re-render to adjust bar widths without full re-init
+                if (!isVisualizing) { 
+                    initVisualization();
+                } else if (currentDataStructure === 'Array') {
+                    renderArrayBars(array); // Re-render array to adjust bar sizes on resize
+                }
+            }, 250); 
+        });
+
+        // Initialize on DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', () => {
+            updateAlgorithmDropdown(); // This will set the initial algorithm and controls
+            initVisualization('initial_load'); // Then fully initialize the visualization area
+        });
+    </script>
+</body>
+</html>
