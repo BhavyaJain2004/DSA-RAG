@@ -100,7 +100,7 @@ To get Algorithm Architect running on your local machine for development or test
 
 Experience Algorithm Architect live! Interact with the AI, visualize DSA concepts, and generate code:
 
-**Live Frontend Demo:** [**https://your-vercel-frontend-domain.vercel.app/**](https://your-vercel-frontend-domain.vercel.app/) (Replace with your actual Vercel deployment URL)
+**Live Frontend Demo:** [**https://your-vercel-frontend-domain.vercel.app/**](https://dsa-rag.vercel.app/) 
 
 ## 🤝 Contributing
 
